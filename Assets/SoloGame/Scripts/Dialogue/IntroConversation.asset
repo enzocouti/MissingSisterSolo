@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8428ae8eb49984b9c433f1784617a3, type: 3}
+  m_Name: IntroConversation
+  m_EditorClassIdentifier: 
+  lines:
+  - speakerName: Beatrice
+    portrait: {fileID: 0}
+    side: 0
+    lineText: '"Hmmm... no... come back..."'
+  - speakerName: Robert
+    portrait: {fileID: 0}
+    side: 1
+    lineText: '"Wake up brawler... you are having nightmares again..."'
+  - speakerName: Beatrice
+    portrait: {fileID: 0}
+    side: 0
+    lineText: '"Ah... what do you want rob?"'
+  - speakerName: Robert
+    portrait: {fileID: 0}
+    side: 1
+    lineText: '"Got news about your sister."'
+  - speakerName: Robert
+    portrait: {fileID: 0}
+    side: 1
+    lineText: '"Something big is happening on that skyscraper..."'
+  - speakerName: Robert
+    portrait: {fileID: 0}
+    side: 1
+    lineText: '"But it is filled with those shitty enforcers..."'
+  - speakerName: Beatrice
+    portrait: {fileID: 0}
+    side: 0
+    lineText: '"I dont care about enforcers... what should I do?!"'
+  - speakerName: Robert
+    portrait: {fileID: 0}
+    side: 1
+    lineText: '"There are some gang hideouts nearby, go kick some ass and spread
+      the enforcers around"'
+  - speakerName: Robert
+    portrait: {fileID: 0}
+    side: 1
+    lineText: '"..."'
+  - speakerName: Robert
+    portrait: {fileID: 0}
+    side: 1
+    lineText: '"I know it has been years and you miss her but... be careful kid"'
+  - speakerName: Beatrice
+    portrait: {fileID: 0}
+    side: 0
+    lineText: '"Will do, thanks old man... im heading out"'

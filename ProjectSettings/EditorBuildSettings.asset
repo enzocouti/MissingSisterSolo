@@ -10,7 +10,7 @@ EditorBuildSettings:
     guid: 15265c6efde56604d80e83d5a8f96f2c
   - enabled: 1
     path: Assets/SoloGame/Scenes/IntroScene.unity
-    guid: d00c63d0718ab3e409c66af03e1cbf02
+    guid: df0fe5bf386a50b48b933db0b1e0bda0
   - enabled: 1
     path: Assets/SoloGame/Scenes/Overworld.unity
     guid: 4486ac4a302940a4bb042a902f0f84aa
