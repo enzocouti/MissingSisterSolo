@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 // Controls menu navigation via arrow keys or gamepad and Handles selector arrow movement and scene switching.
 
@@ -54,17 +55,18 @@ public class MainMenuController : MonoBehaviour
 
     void ConfirmSelection()
     {
+        if (inputLocked) return;
         inputLocked = true;
+
         PlaySound(confirmSFX);
 
         switch (currentIndex)
         {
             case 0:
-                GameManager.Instance.LoadScene("IntroScene");
+                StartCoroutine(LoadSceneAfterDelay("IntroScene", 0.5f)); //fix sound not playing before scene change
                 break;
             case 1:
-                Application.Quit();
-                Debug.Log("[Menu] Quit selected.");
+                StartCoroutine(QuitAfterDelay(0.5f));
                 break;
         }
     }
@@ -73,5 +75,19 @@ public class MainMenuController : MonoBehaviour
     {
         if (sfxSource && clip)
             sfxSource.PlayOneShot(clip);
+    }
+
+    //for testing
+    private IEnumerator LoadSceneAfterDelay(string sceneName, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        GameManager.Instance.LoadScene(sceneName);
+    }
+
+    private IEnumerator QuitAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Application.Quit();
+        Debug.Log("[Menu] Quit called.");
     }
 }
