@@ -27,7 +27,7 @@ public class DialogueManager : MonoBehaviour
     private bool isTyping = false;
     private bool dialogueActive = false;
 
-    [SerializeField] private string sceneToLoadAfterDialogue;
+    [SerializeField] public string sceneToLoadAfterDialogue;
 
     private void Awake()
     {
@@ -137,7 +137,7 @@ public class DialogueManager : MonoBehaviour
         dialogueActive = false;
         currentSequence = null;
 
-        // NEW — Load next scene if assigned
+        
         if (!string.IsNullOrEmpty(sceneToLoadAfterDialogue))
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneToLoadAfterDialogue);

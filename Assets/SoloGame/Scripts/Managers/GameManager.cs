@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     private bool isAlphaBaseCleared = false;
     private bool isBravoBaseCleared = false;
     private bool hasUnlockedSkyscraper = false;
+    public DialogueSequence failureDialogue;
 
     [Header("UI-Linked Info")]
     [SerializeField] private int skullCount = 0;

@@ -119,75 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &12374843
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 12374845}
-  - component: {fileID: 12374844}
-  - component: {fileID: 12374846}
-  m_Layer: 0
-  m_Name: DialogueSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &12374844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 12374843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c88f786e04c11704691ae374a69c3b49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueUI: {fileID: 1779450417}
-  nameText: {fileID: 1779450420}
-  dialogueText: {fileID: 1779450419}
-  leftPortrait: {fileID: 1779450422}
-  rightPortrait: {fileID: 1779450421}
-  blackFade: {fileID: 1779450418}
-  typeSpeed: 0.03
-  advanceKey: 101
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  fadedColor: {r: 1, g: 1, b: 1, a: 0.4}
-  sceneToLoadAfterDialogue: Overworld
---- !u!4 &12374845
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 12374843}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1141.6348, y: 282.5119, z: -6.1045027}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &12374846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 12374843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 502fc4da063e89749983adce77580d3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  introSequence: {fileID: 11400000, guid: a4c012c478dad4248ba3ff9e78469e87, type: 2}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,6 +514,95 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a67f2fbec205e6418cd385c3d9cb225, type: 3}
+--- !u!1001 &6828102181747438193
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 269505372818399241, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1141.6348
+      objectReference: {fileID: 0}
+    - target: {fileID: 269505372818399241, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 282.5119
+      objectReference: {fileID: 0}
+    - target: {fileID: 269505372818399241, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.1045027
+      objectReference: {fileID: 0}
+    - target: {fileID: 269505372818399241, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 269505372818399241, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269505372818399241, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269505372818399241, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269505372818399241, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269505372818399241, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269505372818399241, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7051849084577359562, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: m_Name
+      value: DialogueSystem
+      objectReference: {fileID: 0}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: nameText
+      value: 
+      objectReference: {fileID: 1779450420}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: blackFade
+      value: 
+      objectReference: {fileID: 1779450418}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: dialogueUI
+      value: 
+      objectReference: {fileID: 1779450417}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: dialogueText
+      value: 
+      objectReference: {fileID: 1779450419}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: leftPortrait
+      value: 
+      objectReference: {fileID: 1779450422}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: rightPortrait
+      value: 
+      objectReference: {fileID: 1779450421}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: sceneToLoadAfterDialogue
+      value: Overworld
+      objectReference: {fileID: 0}
+    - target: {fileID: 7566496117295110944, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: introSequence
+      value: 
+      objectReference: {fileID: 11400000, guid: a4c012c478dad4248ba3ff9e78469e87, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -590,5 +610,5 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 1945053454}
-  - {fileID: 12374845}
+  - {fileID: 6828102181747438193}
   - {fileID: 1779450416}
