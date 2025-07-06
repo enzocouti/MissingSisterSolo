@@ -1596,7 +1596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c99b23705f2d945864a84708fda5ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: 
+  sceneToLoad: CombatZoneA
 --- !u!212 &1216736488
 SpriteRenderer:
   m_ObjectHideFlags: 0
