@@ -1,25 +1,25 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Manages the wave system, UI, boss VN, and base completion.
+/// </summary>
 public class CombatZoneManager : MonoBehaviour
 {
-    [Header("Wave Triggers")]
-    public Collider2D waveTrigger1;
-    public Collider2D waveTrigger2;
-    public Collider2D waveTrigger3;
+    public static CombatZoneManager Instance;
 
-    [Header("Enemy Prefabs Per Wave")]
+    [Header("Enemy Spawning")]
     public List<GameObject> wave1Enemies;
     public List<GameObject> wave2Enemies;
     public GameObject bossPrefab;
 
-    [Header("Spawn Points")]
     public Transform spawnPoint1;
     public Transform spawnPoint2;
     public Transform spawnPoint3;
 
-    [Header("Blockades")]
+    [Header("Blockades (Pre-placed, deactivated at start)")]
     public GameObject blockade1;
     public GameObject blockade2;
     public GameObject blockade3;
@@ -29,67 +29,76 @@ public class CombatZoneManager : MonoBehaviour
     public GameObject baseClearedText;
     public GameObject bossHealthUI;
 
-    [Header("Dialogue")]
+    [Header("Boss VN")]
     public DialogueSequence bossDialogueData;
     public DialogueManager dialogueManager;
 
-    private GameObject player;
-    private bool wave1Triggered, wave2Triggered, wave3Triggered;
+    [Header("Settings")]
+    public string baseID = "Bravo"; // or "Alpha"
+    public string overworldSceneName = "Overworld";
 
-    void Start()
+    private GameObject currentBoss;
+    private List<GameObject> currentEnemies = new List<GameObject>();
+
+    private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-
-        goText.SetActive(true);
-        baseClearedText.SetActive(false);
-        bossHealthUI.SetActive(false);
-
-        // Make sure all blockades are off at start
-        blockade1.SetActive(false);
-        blockade2.SetActive(false);
-        blockade3.SetActive(false);
+        Instance = this;
     }
 
-    void Update()
+    private void Start()
     {
-        if (!wave1Triggered && waveTrigger1.bounds.Intersects(player.GetComponent<Collider2D>().bounds))
-            StartCoroutine(HandleWave(wave1Enemies, spawnPoint1, blockade1, 1));
+        if (goText) goText.SetActive(true);
+        if (baseClearedText) baseClearedText.SetActive(false);
+        if (bossHealthUI) bossHealthUI.SetActive(false);
 
-        else if (!wave2Triggered && waveTrigger2.bounds.Intersects(player.GetComponent<Collider2D>().bounds))
-            StartCoroutine(HandleWave(wave2Enemies, spawnPoint2, blockade2, 2));
-
-        else if (!wave3Triggered && waveTrigger3.bounds.Intersects(player.GetComponent<Collider2D>().bounds))
-            StartCoroutine(StartBossSequence());
+        blockade1?.SetActive(false);
+        blockade2?.SetActive(false);
+        blockade3?.SetActive(false);
     }
 
-    IEnumerator HandleWave(List<GameObject> enemyPrefabs, Transform spawnPoint, GameObject blockade, int waveNumber)
+    public void TriggerWave(int waveIndex)
     {
-        if (waveNumber == 1) wave1Triggered = true;
-        else if (waveNumber == 2) wave2Triggered = true;
-
-        LockCameraHere();
-        blockade.SetActive(true);
         goText.SetActive(false);
 
-        List<GameObject> spawnedEnemies = new List<GameObject>();
-        foreach (var prefab in enemyPrefabs)
+        switch (waveIndex)
         {
-            GameObject enemy = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
-            spawnedEnemies.Add(enemy);
+            case 0:
+                StartCoroutine(HandleWave(wave1Enemies, spawnPoint1, blockade1));
+                break;
+            case 1:
+                StartCoroutine(HandleWave(wave2Enemies, spawnPoint2, blockade2));
+                break;
+            case 2:
+                StartCoroutine(StartBossSequence());
+                break;
+            default:
+                Debug.LogWarning($"No wave handler for index {waveIndex}");
+                break;
+        }
+    }
+
+    IEnumerator HandleWave(List<GameObject> enemyPrefabs, Transform spawnPoint, GameObject blockade)
+    {
+        currentEnemies.Clear();
+
+        blockade?.SetActive(true);
+
+        foreach (var enemy in enemyPrefabs)
+        {
+            GameObject e = Instantiate(enemy, spawnPoint.position, Quaternion.identity);
+            currentEnemies.Add(e);
         }
 
-        yield return new WaitUntil(() => spawnedEnemies.TrueForAll(e => e == null));
+        yield return new WaitUntil(() => currentEnemies.TrueForAll(e => e == null));
 
-        blockade.SetActive(false);
-        UnlockCamera();
+        blockade?.SetActive(false);
+        SideCameraFollow.Instance?.Unlock();
         goText.SetActive(true);
     }
 
     IEnumerator StartBossSequence()
     {
-        wave3Triggered = true;
-        LockCameraHere();
-        blockade3.SetActive(true);
+        blockade3?.SetActive(true);
         goText.SetActive(false);
 
         dialogueManager.onDialogueEnd = () =>
@@ -103,28 +112,34 @@ public class CombatZoneManager : MonoBehaviour
 
     IEnumerator HandleBossFight()
     {
-        bossHealthUI.SetActive(true);
-        GameObject boss = Instantiate(bossPrefab, spawnPoint3.position, Quaternion.identity);
+        bossHealthUI?.SetActive(true);
+        currentBoss = Instantiate(bossPrefab, spawnPoint3.position, Quaternion.identity);
 
-        yield return new WaitUntil(() => boss == null);
+        yield return new WaitUntil(() => currentBoss == null);
 
-        bossHealthUI.SetActive(false);
-        baseClearedText.SetActive(true);
-        goText.SetActive(false);
+        bossHealthUI?.SetActive(false);
+        baseClearedText?.SetActive(true);
 
-        GameManager.Instance.MarkBaseCleared("Bravo"); // Or "Alpha" if using for the other base
-
+        GameManager.Instance.MarkBaseCleared(baseID);
         yield return new WaitForSeconds(3f);
-        GameManager.Instance.LoadScene("Overworld");
+
+        GameManager.Instance.LoadScene(overworldSceneName);
     }
 
-    void LockCameraHere()
+    // Optional Debug keys
+    private void Update()
     {
-        SideCameraFollow.Instance.LockCamera(player.transform.position);
-    }
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            Debug.Log("DEBUG: Forcing wave clear");
+            foreach (var enemy in currentEnemies)
+                if (enemy != null) Destroy(enemy);
+        }
 
-    void UnlockCamera()
-    {
-        SideCameraFollow.Instance.UnlockCamera();
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            Debug.Log("DEBUG: Killing boss");
+            if (currentBoss != null) Destroy(currentBoss);
+        }
     }
 }

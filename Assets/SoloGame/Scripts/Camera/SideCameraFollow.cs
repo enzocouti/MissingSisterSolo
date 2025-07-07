@@ -2,43 +2,37 @@ using UnityEngine;
 
 public class SideCameraFollow : MonoBehaviour
 {
-    public static SideCameraFollow Instance { get; private set; }
+    public static SideCameraFollow Instance;
 
-    public Transform target;
-    public float smoothSpeed = 5f;
+    [SerializeField] private Transform player;
+    [SerializeField] private float followSpeed = 5f;
+
     private bool isLocked = false;
-    private Vector3 lockedPosition;
+    private float lockedX;
 
-    void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
+    private void Awake() => Instance = this;
 
-    void LateUpdate()
+    private void LateUpdate()
     {
+        if (player == null) return;
+
+        Vector3 target;
+
         if (isLocked)
-        {
-            transform.position = Vector3.Lerp(transform.position, lockedPosition, smoothSpeed * Time.deltaTime);
-        }
-        else if (target != null)
-        {
-            Vector3 desiredPosition = new Vector3(target.position.x, transform.position.y, transform.position.z);
-            transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-        }
+            target = new Vector3(lockedX, transform.position.y, transform.position.z);
+        else
+            target = new Vector3(player.position.x, transform.position.y, transform.position.z);
+
+        transform.position = Vector3.Lerp(transform.position, target, followSpeed * Time.deltaTime);
     }
 
-    public void LockCamera(Vector3 atPosition)
+    public void LockToX(float x)
     {
         isLocked = true;
-        lockedPosition = new Vector3(atPosition.x, transform.position.y, transform.position.z);
+        lockedX = x;
     }
 
-    public void UnlockCamera()
+    public void Unlock()
     {
         isLocked = false;
     }
