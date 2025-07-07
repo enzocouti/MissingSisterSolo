@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-// script to handle showing, typing, ending
-//testing fade too
+using UnityEngine.SceneManagement;
+
 public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager Instance;
@@ -22,12 +22,15 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color fadedColor = new Color(1, 1, 1, 0.4f);
 
+    [SerializeField] public string sceneToLoadAfterDialogue;
+    public System.Action onDialogueEnd; // optional callback
+
+
     private DialogueSequence currentSequence;
     private int currentIndex = 0;
     private bool isTyping = false;
     private bool dialogueActive = false;
 
-    [SerializeField] public string sceneToLoadAfterDialogue;
 
     private void Awake()
     {
@@ -49,6 +52,7 @@ public class DialogueManager : MonoBehaviour
         currentIndex = 0;
         dialogueActive = true;
 
+        DisablePlayerInput(); // Block input during dialogue
         StartCoroutine(FadeInAndBegin());
     }
 
@@ -69,6 +73,7 @@ public class DialogueManager : MonoBehaviour
             blackFade.color = Color.Lerp(Color.black, Color.clear, t);
             yield return null;
         }
+
         blackFade.gameObject.SetActive(false);
     }
 
@@ -137,14 +142,43 @@ public class DialogueManager : MonoBehaviour
         dialogueActive = false;
         currentSequence = null;
 
-        
-        if (!string.IsNullOrEmpty(sceneToLoadAfterDialogue))
+        EnablePlayerInput(); // Renable input here
+
+        // run onDialogueEnd if set
+        if (onDialogueEnd != null)
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneToLoadAfterDialogue);
+            onDialogueEnd.Invoke();
+            onDialogueEnd = null;
+        }
+        else if (!string.IsNullOrEmpty(sceneToLoadAfterDialogue))
+        {
+            SceneManager.LoadScene(sceneToLoadAfterDialogue);
+            sceneToLoadAfterDialogue = null; // Clear to avoid leftover value
         }
         else
         {
             blackFade.gameObject.SetActive(false);
+        }
+    }
+
+    // Disable player input during VN
+    private void DisablePlayerInput()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            PlayerCombatInput input = player.GetComponent<PlayerCombatInput>();
+            input?.SetInputEnabled(false);
+        }
+    }
+
+    private void EnablePlayerInput()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            PlayerCombatInput input = player.GetComponent<PlayerCombatInput>();
+            input?.SetInputEnabled(true);
         }
     }
 }
