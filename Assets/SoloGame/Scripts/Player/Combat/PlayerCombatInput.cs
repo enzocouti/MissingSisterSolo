@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Handles reading and exposing combat inputs, using the Unity Input System.
-
 public class PlayerCombatInput : MonoBehaviour
 {
     public Vector2 moveInput { get; private set; }
@@ -14,6 +12,7 @@ public class PlayerCombatInput : MonoBehaviour
     public System.Action OnHeavyAttack;
     public System.Action OnJump;
     public System.Action OnLauncher;
+    public System.Action OnDash;
 
     private bool inputEnabled = true;
 
@@ -31,18 +30,14 @@ public class PlayerCombatInput : MonoBehaviour
         inputActions.Combat.HeavyAttack.performed += ctx => { if (inputEnabled) OnHeavyAttack?.Invoke(); };
         inputActions.Combat.Jump.performed += ctx => { if (inputEnabled) OnJump?.Invoke(); };
         inputActions.Combat.Launcher.performed += ctx => { if (inputEnabled) OnLauncher?.Invoke(); };
+        inputActions.Combat.Dash.performed += ctx => { if (inputEnabled) OnDash?.Invoke(); };
     }
 
     private void Update()
     {
-        if (inputEnabled)
-            moveInput = inputActions.Combat.Move.ReadValue<Vector2>();
-        else
-            moveInput = Vector2.zero;
+        moveInput = inputEnabled ? inputActions.Combat.Move.ReadValue<Vector2>() : Vector2.zero;
     }
 
-    // enable and disable 
- 
     public void SetInputEnabled(bool enabled)
     {
         inputEnabled = enabled;

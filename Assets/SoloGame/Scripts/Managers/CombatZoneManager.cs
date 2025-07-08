@@ -3,9 +3,9 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
-/// <summary>
-/// Manages the wave system, UI, boss VN, and base completion.
-/// </summary>
+
+// Manages the wave system UI boss VN and base completion
+
 public class CombatZoneManager : MonoBehaviour
 {
     public static CombatZoneManager Instance;
@@ -34,7 +34,7 @@ public class CombatZoneManager : MonoBehaviour
     public DialogueManager dialogueManager;
 
     [Header("Settings")]
-    public string baseID = "Bravo"; // or "Alpha"
+    public string baseID = "Bravo"; // or Alpha
     public string overworldSceneName = "Overworld";
 
     private GameObject currentBoss;

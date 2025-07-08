@@ -1,32 +1,41 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(PlayerCombatInput))]
 [RequireComponent(typeof(PlayerStateMachine))]
 public class PlayerCombat : MonoBehaviour
 {
-    [Header("Components")]
+    
     public Rigidbody2D rb;
     public SpriteRenderer spriteRenderer;
     public Transform hitboxOrigin;
 
-    [HideInInspector] public PlayerCombatInput input;
-    [HideInInspector] public PlayerStateMachine stateMachine;
+    public PlayerCombatInput input;
+    public PlayerStateMachine stateMachine;
 
-    [Header("Attack Data")]
+    
     public PlayerAttackData[] comboSequence;
     public PlayerAttackData launcherAttack;
     public PlayerAttackData airLightAttack;
     public PlayerAttackData airHeavyAttack;
 
-    [Header("Jump / Dash")]
-    public float jumpDuration = 0.4f; // fake air time
-    public float dashSpeed = 12f;
-    public float dashDuration = 0.2f;
-
-    [Header("State")]
+    
+    public float jumpHeight = 2f;
+    public float jumpDuration = 0.5f;
+    public bool isJumping { get; private set; }
     public bool IsGrounded { get; private set; } = true;
+
+    
     public bool isFacingRight = true;
+    public float dashSpeed = 12f;
+    public bool isAttacking = false;
+
+    //dash
+    public float dashDistance = 3f;
+    public float dashDuration = 0.2f;
+    public string dashIgnoreTag = "Enemy";
+    private bool isDashing = false;
 
     private int currentComboIndex = 0;
     private float comboTimer = 0f;
@@ -46,6 +55,7 @@ public class PlayerCombat : MonoBehaviour
         input.OnHeavyAttack += HandleHeavyAttack;
         input.OnJump += HandleJump;
         input.OnLauncher += HandleLauncher;
+        input.OnDash += HandleDash;
     }
 
     private void OnDisable()
@@ -54,6 +64,7 @@ public class PlayerCombat : MonoBehaviour
         input.OnHeavyAttack -= HandleHeavyAttack;
         input.OnJump -= HandleJump;
         input.OnLauncher -= HandleLauncher;
+        input.OnDash -= HandleDash;
     }
 
     private void Update()
@@ -64,18 +75,10 @@ public class PlayerCombat : MonoBehaviour
 
     private void UpdateFacingDirection()
     {
+        if (isAttacking) return;
+
         if (input.moveInput.x > 0.01f) FaceRight();
         else if (input.moveInput.x < -0.01f) FaceLeft();
-    }
-
-    private void UpdateComboTimer()
-    {
-        if (comboTimer > 0)
-        {
-            comboTimer -= Time.deltaTime;
-            if (comboTimer <= 0)
-                currentComboIndex = 0;
-        }
     }
 
     private void FaceRight()
@@ -96,16 +99,26 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    private void UpdateComboTimer()
+    {
+        if (comboTimer > 0)
+        {
+            comboTimer -= Time.deltaTime;
+            if (comboTimer <= 0)
+                currentComboIndex = 0;
+        }
+    }
+
     private void HandleLightAttack()
     {
         if (!IsGrounded)
         {
-            stateMachine.ChangeState(new AttackState(this, airLightAttack));
+            StartAttack(airLightAttack);
             return;
         }
 
         PlayerAttackData attack = comboSequence[Mathf.Clamp(currentComboIndex, 0, comboSequence.Length - 1)];
-        stateMachine.ChangeState(new AttackState(this, attack));
+        StartAttack(attack);
         currentComboIndex++;
         comboTimer = comboResetTime;
     }
@@ -114,53 +127,128 @@ public class PlayerCombat : MonoBehaviour
     {
         if (!IsGrounded)
         {
-            stateMachine.ChangeState(new AttackState(this, airHeavyAttack));
+            StartAttack(airHeavyAttack);
             return;
         }
 
-        stateMachine.ChangeState(new AttackState(this, comboSequence[comboSequence.Length - 1])); // heavy = last combo
+        StartAttack(comboSequence[comboSequence.Length - 1]);
         currentComboIndex = 0;
         comboTimer = 0;
     }
 
     private void HandleLauncher()
     {
-        if (!IsGrounded) return;
+        if (!IsGrounded || isAttacking) return;
 
-        stateMachine.ChangeState(new AttackState(this, launcherAttack));
+        Debug.Log("Launcher input");
+        StartAttack(launcherAttack);
         currentComboIndex = 0;
         comboTimer = 0;
     }
 
     private void HandleJump()
     {
-        if (!IsGrounded) return;
-
-        IsGrounded = false;
+        if (!IsGrounded || isJumping) return;
         StartCoroutine(SimulateJump());
+    }
+
+    private void HandleDash()
+    {
+        if (isAttacking || isJumping || isDashing) return;
+        StartCoroutine(DashCoroutine());
+        Debug.Log("Dash");
+    }
+
+    private void StartAttack(PlayerAttackData attack)
+    {
+        isAttacking = true;
+        rb.linearVelocity = Vector2.zero;
+        stateMachine.ChangeState(new AttackState(this, attack));
+    }
+
+    public void OnAttackEnd()
+    {
+        isAttacking = false;
     }
 
     private IEnumerator SimulateJump()
     {
-        Debug.Log("Jump started");
-        float elapsed = 0f;
+        isJumping = true;
+        IsGrounded = false;
 
-        while (elapsed < jumpDuration)
+        Vector3 startPos = transform.position;
+        float timer = 0f;
+
+        bool moving = Mathf.Abs(input.moveInput.x) > 0.01f;
+        Vector3 jumpTarget = startPos;
+        string jumpType = "Straight jump";
+
+        if (moving)
         {
+            float arcDistance = 1.2f;
+            float horizontalOffset = isFacingRight ? arcDistance : -arcDistance;
+            jumpTarget = startPos + new Vector3(horizontalOffset, 0, 0);
+            jumpType = isFacingRight ? "Directional jump RIGHT" : "Directional jump LEFT";
+        }
+
+        Debug.Log(jumpType);
+
+        while (timer < jumpDuration)
+        {
+            float progress = timer / jumpDuration;
+            float yOffset = Mathf.Sin(progress * Mathf.PI) * jumpHeight;
+            Vector3 horizontal = Vector3.Lerp(startPos, jumpTarget, progress);
+            transform.position = new Vector3(horizontal.x, startPos.y + yOffset, startPos.z);
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = new Vector3(jumpTarget.x, startPos.y, startPos.z);
+        isJumping = false;
+        IsGrounded = true;
+    }
+
+    private IEnumerator DashCoroutine()
+    {
+        isDashing = true;
+
+        Collider2D[] allCols = GetComponents<Collider2D>();
+        List<Collider2D> ignored = new List<Collider2D>();
+
+        Collider2D[] enemyColliders = GameObject.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
+
+        foreach (var col in enemyColliders)
+        {
+            if (col.CompareTag(dashIgnoreTag))
+            {
+                foreach (var myCol in allCols)
+                    Physics2D.IgnoreCollision(myCol, col, true);
+                ignored.Add(col);
+            }
+        }
+
+        Vector3 start = transform.position;
+        float direction = isFacingRight ? 1f : -1f;
+        Vector3 target = start + new Vector3(dashDistance * direction, 0f, 0f);
+
+        float elapsed = 0f;
+        while (elapsed < dashDuration)
+        {
+            float t = elapsed / dashDuration;
+            transform.position = Vector3.Lerp(start, target, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        IsGrounded = true;
-        Debug.Log("Landed");
-    }
+        transform.position = target;
 
-    public void Dash()
-    {
-        Vector2 dashDirection = isFacingRight ? Vector2.right : Vector2.left;
-        rb.linearVelocity = dashDirection * dashSpeed;
-        // start dash coroutine for I-frames later
-    }
+        foreach (var col in ignored)
+        {
+            foreach (var myCol in allCols)
+                Physics2D.IgnoreCollision(myCol, col, false);
+        }
 
-    // draw gizmos or debug visual helpers here
+        isDashing = false;
+    }
 }
