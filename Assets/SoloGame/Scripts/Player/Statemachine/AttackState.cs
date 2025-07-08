@@ -16,7 +16,7 @@ public class AttackState : IPlayerState
     {
         timer = attackData.attackDuration;
         SpawnHitbox();
-        Debug.Log("Entered Attack" + attackData.attackName);
+        Debug.Log("Attack Started: " + attackData.attackName);
     }
 
     public void Update()
@@ -28,16 +28,17 @@ public class AttackState : IPlayerState
         }
     }
 
-    public void Exit()
-    {
-        Debug.Log("Exited");
-    }
+    public void Exit() { }
 
     private void SpawnHitbox()
     {
         GameObject hitbox = new GameObject("AttackHitbox");
-        hitbox.transform.position = player.transform.position + (Vector3)attackData.hitboxOffset;
         hitbox.transform.parent = player.transform;
+
+        Vector2 flippedOffset = attackData.hitboxOffset;
+        flippedOffset.x *= player.isFacingRight ? 1 : -1;
+
+        hitbox.transform.position = player.hitboxOrigin.position + (Vector3)flippedOffset;
 
         BoxCollider2D col = hitbox.AddComponent<BoxCollider2D>();
         col.size = attackData.hitboxSize;
@@ -45,5 +46,7 @@ public class AttackState : IPlayerState
 
         var hb = hitbox.AddComponent<PlayerHitbox>();
         hb.attackData = attackData;
+
+        // flip visuals or debug gizmos
     }
 }

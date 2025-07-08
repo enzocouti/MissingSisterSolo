@@ -15,12 +15,13 @@ public class PlayerHitbox : MonoBehaviour
         {
             Debug.Log($"{attackData.attackName} hit {other.name}");
 
-            // Apply knockback and feedback later
-            
-            var flash = other.GetComponent<EnemyFlashFeedback>();
-            if (flash) flash.Flash();
+            bool playerFacingRight = transform.parent.GetComponent<PlayerCombat>().isFacingRight;
 
-            // Add force damage later
+            var enemyHealth = other.GetComponent<EnemyHealth>();
+            if (enemyHealth)
+            {
+                enemyHealth.TakeHit(attackData, playerFacingRight);
+            }
         }
     }
 }

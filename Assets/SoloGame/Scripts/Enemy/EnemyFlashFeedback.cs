@@ -3,12 +3,12 @@ using UnityEngine;
 public class EnemyFlashFeedback : MonoBehaviour
 {
     private SpriteRenderer sr;
-    private Color original;
+    private Color originalColor;
 
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
-        original = sr.color;
+        originalColor = sr.color;
     }
 
     public void Flash()
@@ -21,7 +21,6 @@ public class EnemyFlashFeedback : MonoBehaviour
     {
         sr.color = Color.red;
         yield return new WaitForSeconds(0.1f);
-        sr.color = original;
+        sr.color = originalColor;
     }
 }
-//testing
