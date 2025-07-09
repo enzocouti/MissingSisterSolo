@@ -144,7 +144,7 @@ public class DialogueManager : MonoBehaviour
 
         EnablePlayerInput(); // Renable input here
 
-        // run onDialogueEnd if set
+        
         if (onDialogueEnd != null)
         {
             onDialogueEnd.Invoke();
@@ -153,7 +153,7 @@ public class DialogueManager : MonoBehaviour
         else if (!string.IsNullOrEmpty(sceneToLoadAfterDialogue))
         {
             SceneManager.LoadScene(sceneToLoadAfterDialogue);
-            sceneToLoadAfterDialogue = null; // Clear to avoid leftover value
+            sceneToLoadAfterDialogue = null; // Clear to avoid leftover
         }
         else
         {

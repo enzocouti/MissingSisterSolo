@@ -9,13 +9,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [Header("Progress Tracking")]
+    
     private bool isAlphaBaseCleared = false;
     private bool isBravoBaseCleared = false;
     private bool hasUnlockedSkyscraper = false;
     public DialogueSequence failureDialogue;
 
-    [Header("UI-Linked Info")]
+    
     [SerializeField] private int skullCount = 0;
 
     private void Awake()
@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("[GameManager] Tried to load a scene with no name.");
+            Debug.LogError("[GameManager] Tried to load a scene with no name");
         }
     }
 }

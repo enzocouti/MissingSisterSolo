@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class OverworldPlayerController : MonoBehaviour
 {
-    [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 4.0f;
 
     private Rigidbody2D rb;

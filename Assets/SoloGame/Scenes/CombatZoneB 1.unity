@@ -409,7 +409,7 @@ MonoBehaviour:
   bossHealthUI: {fileID: 1516975443}
   bossDialogueData: {fileID: 11400000, guid: a4c250b339a8610488bf42e9528ab02d, type: 2}
   dialogueManager: {fileID: 413414913}
-  baseID: Bravo
+  baseID: Alpha
   overworldSceneName: Overworld
 --- !u!1 &134448500
 GameObject:
