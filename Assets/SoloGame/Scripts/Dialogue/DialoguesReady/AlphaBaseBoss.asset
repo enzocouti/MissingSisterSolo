@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - speakerName: Mob Boss
-    portrait: {fileID: 0}
-    side: 1
     lineText: '"Who the hell are you?"'
+    leftPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+    rightPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+    highlightSide: 2
   - speakerName: Beatrice
-    portrait: {fileID: 0}
-    side: 0
     lineText: '"Shut up and fight"'
+    leftPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+    rightPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+    highlightSide: 1

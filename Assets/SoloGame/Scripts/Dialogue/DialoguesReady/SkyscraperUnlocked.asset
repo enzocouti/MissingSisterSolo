@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - speakerName: Beatrice
-    portrait: {fileID: 0}
-    side: 0
     lineText: '" It seems they finally left to investigate"'
+    leftPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+    rightPortrait: {fileID: 0}
+    highlightSide: 1
   - speakerName: Beatrice
-    portrait: {fileID: 0}
-    side: 0
     lineText: '"I can finally go to the skyscraper now"'
+    leftPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+    rightPortrait: {fileID: 0}
+    highlightSide: 1

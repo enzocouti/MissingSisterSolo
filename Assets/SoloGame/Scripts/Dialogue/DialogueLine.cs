@@ -1,17 +1,20 @@
 using UnityEngine;
 
-// testing one line of dialogue from a character
 [System.Serializable]
 public class DialogueLine
 {
-    public string speakerName;          //name
-    public Sprite portrait;             //image
-    public DialogueSide side;           //Left or Right
-    [TextArea(2, 4)] public string lineText; //text
+    public string speakerName;                      // Name displayed above text
+    [TextArea(2, 4)] public string lineText;        // Main dialogue text
+
+    public Sprite leftPortrait;     // Portrait for the left side (set null to hide)
+    public Sprite rightPortrait;    // Portrait for the right side 
+
+    public DialogueHighlight highlightSide = DialogueHighlight.Left; // Which side is highlighted 
 }
 
-public enum DialogueSide
+public enum DialogueHighlight
 {
+    None,
     Left,
     Right
 }

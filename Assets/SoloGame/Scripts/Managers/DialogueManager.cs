@@ -84,21 +84,33 @@ public class DialogueManager : MonoBehaviour
         nameText.text = line.speakerName;
         dialogueText.text = "";
 
-        if (line.side == DialogueSide.Left)
+        // Left portrair logic
+        if (line.leftPortrait != null)
         {
-            leftPortrait.sprite = line.portrait;
-            leftPortrait.color = normalColor;
-            rightPortrait.color = fadedColor;
+            leftPortrait.gameObject.SetActive(true);
+            leftPortrait.sprite = line.leftPortrait;
+            leftPortrait.color = (line.highlightSide == DialogueHighlight.Left) ? normalColor : fadedColor;
         }
         else
         {
-            rightPortrait.sprite = line.portrait;
-            rightPortrait.color = normalColor;
-            leftPortrait.color = fadedColor;
+            leftPortrait.gameObject.SetActive(false);
+        }
+
+        // Right portrait logic
+        if (line.rightPortrait != null)
+        {
+            rightPortrait.gameObject.SetActive(true);
+            rightPortrait.sprite = line.rightPortrait;
+            rightPortrait.color = (line.highlightSide == DialogueHighlight.Right) ? normalColor : fadedColor;
+        }
+        else
+        {
+            rightPortrait.gameObject.SetActive(false);
         }
 
         StartCoroutine(TypeLine(line.lineText));
     }
+
 
     private IEnumerator TypeLine(string text)
     {
