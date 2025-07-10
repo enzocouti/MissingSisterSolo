@@ -15,14 +15,11 @@ public class PlayerHitbox : MonoBehaviour
         {
             Debug.Log($"{attackData.attackName} hit {other.name}");
 
-            //var flash = other.GetComponent<EnemyFlashFeedback>();
-            //flash?.Flash();
-
-            //var enemy = other.GetComponent<EnemyCombatController>();
-            //if (enemy != null)
+            var enemyHealth = other.GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
             {
-                //var facing = GetComponentInParent<PlayerCombat>()?.isFacingRight ?? true;
-                //enemy.TakeHit(attackData, facing);
+                bool hitFromRight = (transform.position.x < other.transform.position.x);
+                enemyHealth.TakeDamage(attackData, hitFromRight);
             }
         }
     }

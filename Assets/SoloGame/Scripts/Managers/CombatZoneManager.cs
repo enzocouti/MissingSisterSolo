@@ -142,4 +142,12 @@ public class CombatZoneManager : MonoBehaviour
             if (currentBoss != null) Destroy(currentBoss);
         }
     }
+
+    public void NotifyEnemyKilled(GameObject enemy) //notification communication
+    {
+        if (currentEnemies.Contains(enemy))
+        {
+            currentEnemies.Remove(enemy);
+        }
+    }
 }
