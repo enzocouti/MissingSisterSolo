@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6210966951916511927}
   - component: {fileID: 940736084987223559}
   - component: {fileID: 8443096661765868198}
+  - component: {fileID: 3473221098959847161}
   m_Layer: 0
   m_Name: Player
   m_TagString: PlayerOne
@@ -202,11 +203,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e295bb1e7986b4fb55bd99a3aed638, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  hitboxOrigin: {fileID: 0}
+  input: {fileID: 0}
   stateMachine: {fileID: 2509045803240025551}
-  lightCooldown: 0.2
-  heavyCooldown: 0.4
-  lightAttack: {fileID: 11400000, guid: b70091dafb9c1cc4c8965106045a630a, type: 2}
-  heavyAttack: {fileID: 11400000, guid: 90727b4039be1514a84e77c4df8db321, type: 2}
+  comboSequence: []
+  launcherAttack: {fileID: 0}
+  airLightAttack: {fileID: 0}
+  airHeavyAttack: {fileID: 0}
+  jumpHeight: 2
+  jumpDuration: 0.5
+  isFacingRight: 1
+  dashSpeed: 12
+  isAttacking: 0
+  dashDistance: 3
+  dashDuration: 0.2
+  dashIgnoreTag: Enemy
+  comboResetTime: 0.5
 --- !u!114 &8443096661765868198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,3 +234,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+--- !u!114 &3473221098959847161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3716531794894502517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec2bc80122635e499d95c9ed200e00c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  currentHealth: 0
+  invincibleTime: 0.8
+  knockdownComboWindow: 1.2
+  hitsForKnockdown: 3
+  healthBar: {fileID: 0}
+  spriteRenderer: {fileID: 116088138393488863}
+  playerInput: {fileID: 6210966951916511927}
+  rb: {fileID: 7569330802048851124}
+  flashDuration: 0.1
+  shakeAmount: 0.1
+  shakeCount: 2

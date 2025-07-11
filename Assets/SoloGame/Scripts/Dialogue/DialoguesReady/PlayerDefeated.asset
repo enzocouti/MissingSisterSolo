@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8428ae8eb49984b9c433f1784617a3, type: 3}
+  m_Name: PlayerDefeated
+  m_EditorClassIdentifier: 
+  lines:
+  - speakerName: 
+    lineText: You wake up on the sidewalk after a beating.
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    highlightSide: 0
+  - speakerName: Beatrice
+    lineText: '"...."'
+    leftPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+    rightPortrait: {fileID: 0}
+    highlightSide: 1
+  - speakerName: Beatrice
+    lineText: '"F#CK!"'
+    leftPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+    rightPortrait: {fileID: 0}
+    highlightSide: 1

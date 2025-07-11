@@ -92,7 +92,13 @@ public class EnemyCombatController : MonoBehaviour
         {
             lastAttackTime = Time.time;
             Debug.Log("[Enemy] Attack player!");
-            // add real player damage here later
+
+            if (player != null)
+            {
+                PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+                if (playerHealth != null)
+                    playerHealth.TakeDamage(touchDamage);
+            }
         }
     }
 

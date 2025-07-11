@@ -1,39 +1,30 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
-// Holds game state such as mission progress and scene transitions
-// Persists between scenes as a singleton
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    
     private bool isAlphaBaseCleared = false;
     private bool isBravoBaseCleared = false;
     private bool hasUnlockedSkyscraper = false;
     public DialogueSequence failureDialogue;
-
-    
     [SerializeField] private int skullCount = 0;
+
+    private bool shouldPlayFailureDialogue = false;
 
     private void Awake()
     {
-        // Make sure theres only one GameManager 
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
-        DontDestroyOnLoad(gameObject); // Survive scene changes
+        DontDestroyOnLoad(gameObject);
     }
 
-    
-    // Call this when the player finishes a base ID Alpha or Bravo
-    
+    // Call when a base is cleared
     public void MarkBaseCleared(string baseId)
     {
         switch (baseId)
@@ -45,7 +36,6 @@ public class GameManager : MonoBehaviour
                     AddSkull();
                 }
                 break;
-
             case "Bravo":
                 if (!isBravoBaseCleared)
                 {
@@ -53,12 +43,10 @@ public class GameManager : MonoBehaviour
                     AddSkull();
                 }
                 break;
-
             default:
-                Debug.LogWarning($"[GameManager] Unknown base ID: {baseId} — typo?");
+                Debug.LogWarning($"[GameManager] Unknown base ID: {baseId}");
                 break;
         }
-
         TryUnlockSkyscraper();
     }
 
@@ -66,8 +54,6 @@ public class GameManager : MonoBehaviour
     {
         skullCount++;
         Debug.Log($"[GameManager] Skull counter updated: {skullCount}/2");
-
-        // TODO Hook into UI update method when we build that
     }
 
     private void TryUnlockSkyscraper()
@@ -75,22 +61,43 @@ public class GameManager : MonoBehaviour
         if (!hasUnlockedSkyscraper && isAlphaBaseCleared && isBravoBaseCleared)
         {
             hasUnlockedSkyscraper = true;
-            Debug.Log("[GameManager] All bases cleared — skyscraper is now unlocked!");
+            Debug.Log("[GameManager] All bases cleared — skyscraper unlocked!");
         }
     }
 
     public int GetSkullCount() => skullCount;
     public bool IsSkyscraperUnlocked() => hasUnlockedSkyscraper;
 
-    public void LoadScene(string sceneName)
+    // Scene loader. If playFailureDialogue is true, triggers defeat dialogue after Overworld loads.
+    public void LoadScene(string sceneName, bool playFailureDialogue = false)
     {
         if (!string.IsNullOrWhiteSpace(sceneName))
         {
+            shouldPlayFailureDialogue = playFailureDialogue;
+            SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.LoadScene(sceneName);
         }
         else
         {
             Debug.LogError("[GameManager] Tried to load a scene with no name");
         }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (shouldPlayFailureDialogue)
+        {
+            shouldPlayFailureDialogue = false;
+            if (DialogueManager.Instance != null && failureDialogue != null)
+                DialogueManager.Instance.StartDialogue(failureDialogue);
+        }
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // For debug/testing: manually play defeat dialogue
+    public void StartFailureSequence()
+    {
+        if (DialogueManager.Instance != null && failureDialogue != null)
+            DialogueManager.Instance.StartDialogue(failureDialogue);
     }
 }

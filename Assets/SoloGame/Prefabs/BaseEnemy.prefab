@@ -131,7 +131,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3710608012585119877}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -225,7 +225,7 @@ MonoBehaviour:
   detectionRange: 15
   attackRange: 1.2
   attackCooldown: 1.4
-  touchDamage: 2
+  touchDamage: 10
   minSeparation: 2
   verticalAlignThreshold: 0.32
   verticalSeparation: 0.5
