@@ -16,10 +16,12 @@ public class PlayerHitbox : MonoBehaviour
             Debug.Log($"{attackData.attackName} hit {other.name}");
 
             var enemyHealth = other.GetComponent<EnemyHealth>();
+            var playerCombat = GetComponentInParent<PlayerCombat>();
+            bool playerIsFacingRight = playerCombat ? playerCombat.isFacingRight : true; // fallback true
+
             if (enemyHealth != null)
             {
-                bool hitFromRight = (transform.position.x < other.transform.position.x);
-                enemyHealth.TakeDamage(attackData, hitFromRight);
+                enemyHealth.TakeDamage(attackData, playerIsFacingRight);
             }
         }
     }

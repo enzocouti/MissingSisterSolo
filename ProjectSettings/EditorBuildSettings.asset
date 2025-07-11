@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/SoloGame/Scenes/CombatZoneA.unity
     guid: 026a7127971165a4baad4395ccaa4bba
+  - enabled: 1
+    path: Assets/SoloGame/Scenes/CombatZoneB.unity
+    guid: 3bf4e0d48c0eb3444b7a602381a60a59
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

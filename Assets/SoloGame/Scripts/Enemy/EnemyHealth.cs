@@ -13,8 +13,8 @@ public class EnemyHealth : MonoBehaviour
         controller = GetComponent<EnemyCombatController>();
     }
 
-    // Called by player hitbox pass in PlayerAttackData for flexible feedback
-    public void TakeDamage(PlayerAttackData attackData, bool hitFromRight)
+    // playerIsFacingRight means true = knock right, false = knock left
+    public void TakeDamage(PlayerAttackData attackData, bool playerIsFacingRight)
     {
         if (currentHealth <= 0) return;
 
@@ -22,9 +22,9 @@ public class EnemyHealth : MonoBehaviour
 
         Debug.Log($"[EnemyHealth] {gameObject.name} took {attackData.damage} ({currentHealth}/{maxHealth}) from {attackData.attackName}");
 
-        // Let controller handle hurt feedback & logic
+        // Pass correct direction to the controller
         if (controller != null)
-            controller.OnHurt(attackData, hitFromRight);
+            controller.OnHurt(attackData, playerIsFacingRight);
 
         if (currentHealth <= 0)
         {

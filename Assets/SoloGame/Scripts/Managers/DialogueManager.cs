@@ -18,7 +18,8 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private float typeSpeed = 0.03f;
-    [SerializeField] private KeyCode advanceKey = KeyCode.E;
+    [SerializeField] private KeyCode advanceKey = KeyCode.Return; 
+    [SerializeField] private KeyCode backKey = KeyCode.Backspace;//test key for backtracking dialogue lines
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color fadedColor = new Color(1, 1, 1, 0.4f);
 
@@ -40,9 +41,16 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        if (dialogueActive && Input.GetKeyDown(advanceKey) && !isTyping)
+        if (dialogueActive)
         {
-            NextLine();
+            if (Input.GetKeyDown(advanceKey) && !isTyping)
+            {
+                NextLine();
+            }
+            else if (Input.GetKeyDown(backKey) && !isTyping)
+            {
+                PreviousLine();
+            }
         }
     }
 
@@ -192,5 +200,15 @@ public class DialogueManager : MonoBehaviour
             PlayerCombatInput input = player.GetComponent<PlayerCombatInput>();
             input?.SetInputEnabled(true);
         }
+    }
+
+    private void PreviousLine()
+    {
+        if (currentIndex > 0)
+        {
+            currentIndex--;
+            ShowLine();
+        }
+        // testing backtrack method
     }
 }

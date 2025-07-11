@@ -15,7 +15,11 @@ MonoBehaviour:
   attackName: LightPunch
   damage: 10
   attackDuration: 0.3
-  hitboxOffset: {x: 1, y: 0}
   hitboxSize: {x: 1, y: 1}
-  knockbackForce: {x: 1, y: 1}
-  launches: 0
+  hitboxOffset: {x: 1, y: 0}
+  isLauncher: 0
+  isHeavy: 1
+  knockbackForce: 2
+  launchHeight: 2
+  launchDuration: 0.45
+  launchHangTime: 0.15

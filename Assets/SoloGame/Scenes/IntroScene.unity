@@ -575,6 +575,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1779450418}
     - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: advanceKey
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
       propertyPath: dialogueUI
       value: 
       objectReference: {fileID: 1779450417}

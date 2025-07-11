@@ -15,7 +15,11 @@ MonoBehaviour:
   attackName: Launcher
   damage: 10
   attackDuration: 0.3
-  hitboxOffset: {x: 0, y: 0}
   hitboxSize: {x: 1, y: 1}
-  knockbackForce: {x: 2, y: 10}
-  launches: 1
+  hitboxOffset: {x: 0, y: 0}
+  isLauncher: 1
+  isHeavy: 0
+  knockbackForce: 0
+  launchHeight: 2
+  launchDuration: 0.8
+  launchHangTime: 0.5

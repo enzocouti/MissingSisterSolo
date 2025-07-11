@@ -208,7 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0664842afd7ea45b93bbf2b24e905b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
+  maxHealth: 40
 --- !u!114 &521866023417761999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,7 +222,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2.5
-  detectionRange: 7
+  detectionRange: 15
   attackRange: 1.2
   attackCooldown: 1.4
   touchDamage: 2
+  minSeparation: 2
+  verticalAlignThreshold: 0.32
+  verticalSeparation: 0.5
