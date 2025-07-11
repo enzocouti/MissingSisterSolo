@@ -397,7 +397,7 @@ MonoBehaviour:
   - {fileID: 3710608012585119877, guid: b3dd3328035f325429da6bada56e5652, type: 3}
   - {fileID: 3710608012585119877, guid: b3dd3328035f325429da6bada56e5652, type: 3}
   - {fileID: 3710608012585119877, guid: b3dd3328035f325429da6bada56e5652, type: 3}
-  bossPrefab: {fileID: 3888685641579907022, guid: ab0888cd30e45d046bb7028039f2072b, type: 3}
+  bossPrefab: {fileID: 3710608012585119877, guid: ef8755c348db8b74fa0edb4e2c74a507, type: 3}
   spawnPoint1: {fileID: 1302921281}
   spawnPoint2: {fileID: 1862415788}
   spawnPoint3: {fileID: 279131320}

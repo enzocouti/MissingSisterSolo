@@ -14,13 +14,13 @@ public class EnemyCombatController : MonoBehaviour
     public float verticalAlignThreshold = 0.32f;
     public float verticalSeparation = 0.5f;
 
-    private Transform player;
+    protected Transform player;
     private bool isDead = false;
     private bool isHurt = false;
-    private bool isLaunched = false;
+    protected bool isLaunched = false;
     private float lastAttackTime = -99f;
 
-    private SpriteRenderer spriteRenderer;
+    protected SpriteRenderer spriteRenderer;
     private Color baseColor;
 
     private void Start()
@@ -86,7 +86,7 @@ public class EnemyCombatController : MonoBehaviour
         }
     }
 
-    private void TryAttack()
+    protected virtual void TryAttack() //get the boss script to override? attempt
     {
         if (Time.time - lastAttackTime >= attackCooldown)
         {

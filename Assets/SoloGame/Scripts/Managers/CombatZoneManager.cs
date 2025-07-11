@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 
 // Manages the wave system UI boss VN and base completion
@@ -115,6 +116,14 @@ public class CombatZoneManager : MonoBehaviour
         bossHealthUI?.SetActive(true);
         currentBoss = Instantiate(bossPrefab, spawnPoint3.position, Quaternion.identity);
 
+        // Assign health bar to boss after spawning
+        BossHealth bossHealth = currentBoss.GetComponent<BossHealth>();
+        if (bossHealth != null && bossHealthUI != null)
+        {
+            Scrollbar bossBar = bossHealthUI.GetComponentInChildren<Scrollbar>();
+            bossHealth.SetHealthBar(bossBar);
+        }
+
         yield return new WaitUntil(() => currentBoss == null);
 
         bossHealthUI?.SetActive(false);
@@ -125,6 +134,7 @@ public class CombatZoneManager : MonoBehaviour
 
         GameManager.Instance.LoadScene(overworldSceneName);
     }
+
 
     // Optional Debug keys
     private void Update()
