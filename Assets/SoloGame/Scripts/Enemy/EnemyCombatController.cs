@@ -1,8 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemyCombatController : MonoBehaviour
 {
+    [Header("AI & Combat")]
     public float moveSpeed = 2.5f;
     public float detectionRange = 7f;
     public float attackRange = 1.2f;
@@ -14,20 +16,43 @@ public class EnemyCombatController : MonoBehaviour
     public float verticalAlignThreshold = 0.32f;
     public float verticalSeparation = 0.5f;
 
+    [Header("Behavior Tuning")]
+    public int maxAttackers = 1;
+    public float paceDistance = 0.7f;
+    public float paceSpeed = 1.1f;
+
     protected Transform player;
+    protected static List<EnemyCombatController> attackers = new List<EnemyCombatController>();
+
+    protected bool isAttacking = false;
+    protected bool isPacing = false;
     private bool isDead = false;
     private bool isHurt = false;
     protected bool isLaunched = false;
-    private float lastAttackTime = -99f;
+    protected float lastAttackTime = -99f;
 
     protected SpriteRenderer spriteRenderer;
     private Color baseColor;
+
+    private Vector3 startPacePos;
+    private int paceDir = 1;
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         spriteRenderer = GetComponent<SpriteRenderer>();
         baseColor = spriteRenderer ? spriteRenderer.color : Color.white;
+
+        Collider2D myCol = GetComponent<Collider2D>();
+        foreach (var enemy in FindObjectsByType<EnemyCombatController>(FindObjectsSortMode.None))
+        {
+            if (enemy != this)
+            {
+                Collider2D otherCol = enemy.GetComponent<Collider2D>();
+                if (myCol && otherCol)
+                    Physics2D.IgnoreCollision(myCol, otherCol, true);
+            }
+        }
     }
 
     void Update()
@@ -42,7 +67,15 @@ public class EnemyCombatController : MonoBehaviour
 
         if (attackDist <= attackRange)
         {
-            TryAttack();
+            if (!isAttacking && CanAttack())
+            {
+                TryAttack(); // <-- Use this for extensibility!
+            }
+            else if (!isAttacking)
+            {
+                if (!isPacing)
+                    StartCoroutine(PaceCoroutine());
+            }
         }
         else if (attackDist <= detectionRange)
         {
@@ -57,7 +90,7 @@ public class EnemyCombatController : MonoBehaviour
                 Collider2D[] nearby = Physics2D.OverlapCircleAll(transform.position, minSeparation);
                 foreach (var col in nearby)
                 {
-                    if (col != null && col != this.GetComponent<Collider2D>() && col.CompareTag("Enemy"))
+                    if (col != null && col != GetComponent<Collider2D>() && col.CompareTag("Enemy"))
                     {
                         Vector2 otherPos = col.transform.position;
                         float horizontalDiff = otherPos.x - transform.position.x;
@@ -73,12 +106,10 @@ public class EnemyCombatController : MonoBehaviour
                         }
                     }
                 }
-
                 if (!blocked)
                 {
                     float xDir = Mathf.Sign(toPlayer.x);
                     transform.position += new Vector3(xDir * moveSpeed * Time.deltaTime, 0, 0);
-
                     if (spriteRenderer)
                         spriteRenderer.flipX = (xDir < 0);
                 }
@@ -86,27 +117,65 @@ public class EnemyCombatController : MonoBehaviour
         }
     }
 
-    protected virtual void TryAttack() //get the boss script to override? attempt
+    // This is what bosses will override!
+    protected virtual void TryAttack()
     {
-        if (Time.time - lastAttackTime >= attackCooldown)
-        {
-            lastAttackTime = Time.time;
-            Debug.Log("[Enemy] Attack player!");
-
-            if (player != null)
-            {
-                PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-                if (playerHealth != null)
-                    playerHealth.TakeDamage(touchDamage);
-            }
-        }
+        attackers.Add(this);
+        StartCoroutine(AttackCoroutine());
     }
 
-    // Changed parameter name for clarity!
+    private bool CanAttack()
+    {
+        attackers.RemoveAll(a => a == null);
+        return attackers.Count < maxAttackers || attackers.Contains(this);
+    }
+
+    private IEnumerator AttackCoroutine()
+    {
+        isAttacking = true;
+        float windup = 0.18f;
+        float hitPause = 0.09f;
+        if (spriteRenderer) spriteRenderer.color = Color.yellow;
+        yield return new WaitForSeconds(windup);
+
+        if (spriteRenderer) spriteRenderer.color = Color.red;
+        if (player != null)
+        {
+            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+                playerHealth.TakeDamage(touchDamage);
+        }
+        yield return new WaitForSeconds(hitPause);
+
+        if (spriteRenderer) spriteRenderer.color = baseColor;
+        lastAttackTime = Time.time;
+        yield return new WaitForSeconds(attackCooldown - windup - hitPause);
+
+        isAttacking = false;
+        attackers.Remove(this);
+    }
+
+    private IEnumerator PaceCoroutine()
+    {
+        isPacing = true;
+        startPacePos = transform.position;
+        float paceTime = Random.Range(0.3f, 0.75f);
+        paceDir = Random.value < 0.5f ? -1 : 1;
+
+        float timer = 0;
+        while (timer < paceTime && !isAttacking)
+        {
+            float move = paceDir * paceSpeed * Time.deltaTime;
+            transform.position = startPacePos + new Vector3(move * Mathf.Sin(timer * 2f), 0, 0);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        isPacing = false;
+    }
+
     public void OnHurt(PlayerAttackData attackData, bool playerIsFacingRight)
     {
         if (isDead) return;
-
         if (attackData.isLauncher)
         {
             StartCoroutine(LaunchCoroutine(attackData, playerIsFacingRight));
@@ -127,6 +196,7 @@ public class EnemyCombatController : MonoBehaviour
         StopAllCoroutines();
         if (spriteRenderer)
             spriteRenderer.color = Color.gray;
+        attackers.Remove(this);
     }
 
     IEnumerator HurtFeedback()
@@ -158,7 +228,6 @@ public class EnemyCombatController : MonoBehaviour
         isHurt = false;
     }
 
-    // Use playerIsFacingRight for correct knockback direction!
     IEnumerator KnockbackCoroutine(PlayerAttackData attackData, bool playerIsFacingRight)
     {
         isLaunched = true;
@@ -193,7 +262,6 @@ public class EnemyCombatController : MonoBehaviour
         Vector3 start = transform.position;
 
         float timer = 0f;
-        // Upward arc
         while (timer < duration)
         {
             float progress = timer / duration;

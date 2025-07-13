@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // Call when a base is cleared
     public void MarkBaseCleared(string baseId)
     {
         switch (baseId)

@@ -16,22 +16,30 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Image rightPortrait;
     [SerializeField] private Image blackFade;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource bgmSource;
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip defaultBGM;
+    [SerializeField] private AudioClip typewriterSFX;
+
     [Header("Settings")]
     [SerializeField] private float typeSpeed = 0.03f;
-    [SerializeField] private KeyCode advanceKey = KeyCode.Return; 
-    [SerializeField] private KeyCode backKey = KeyCode.Backspace;//test key for backtracking dialogue lines
+    [SerializeField] private KeyCode advanceKey = KeyCode.Return;
+    [SerializeField] private KeyCode backKey = KeyCode.Backspace;
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color fadedColor = new Color(1, 1, 1, 0.4f);
+    [SerializeField] private float bgmFadeTime = 1.2f;
 
     [SerializeField] public string sceneToLoadAfterDialogue;
-    public System.Action onDialogueEnd; // optional callback
-
+    public System.Action onDialogueEnd;
 
     private DialogueSequence currentSequence;
     private int currentIndex = 0;
     private bool isTyping = false;
     private bool dialogueActive = false;
 
+    private AudioClip previousBGM;
+    private Coroutine bgmFadeCoroutine;
 
     private void Awake()
     {
@@ -60,7 +68,18 @@ public class DialogueManager : MonoBehaviour
         currentIndex = 0;
         dialogueActive = true;
 
-        DisablePlayerInput(); // Block input during dialogue
+        // Handle BGM fade & switch
+        if (sequence.playBGM && sequence.bgmClip != null && bgmSource != null)
+        {
+            previousBGM = bgmSource.clip;
+            StartCoroutine(FadeOutAndChangeBGM(sequence.bgmClip));
+        }
+        else
+        {
+            previousBGM = bgmSource != null ? bgmSource.clip : null;
+        }
+
+        DisablePlayerInput();
         StartCoroutine(FadeInAndBegin());
     }
 
@@ -92,7 +111,6 @@ public class DialogueManager : MonoBehaviour
         nameText.text = line.speakerName;
         dialogueText.text = "";
 
-        // Left portrair logic
         if (line.leftPortrait != null)
         {
             leftPortrait.gameObject.SetActive(true);
@@ -104,7 +122,6 @@ public class DialogueManager : MonoBehaviour
             leftPortrait.gameObject.SetActive(false);
         }
 
-        // Right portrait logic
         if (line.rightPortrait != null)
         {
             rightPortrait.gameObject.SetActive(true);
@@ -119,13 +136,19 @@ public class DialogueManager : MonoBehaviour
         StartCoroutine(TypeLine(line.lineText));
     }
 
-
     private IEnumerator TypeLine(string text)
     {
         isTyping = true;
+        int letterCount = 0;
         foreach (char c in text)
         {
             dialogueText.text += c;
+            if (!char.IsWhiteSpace(c) && typewriterSFX != null && sfxSource != null)
+            {
+                if (letterCount % 2 == 0)
+                    sfxSource.PlayOneShot(typewriterSFX, 0.7f);
+            }
+            letterCount++;
             yield return new WaitForSeconds(typeSpeed);
         }
         isTyping = false;
@@ -144,7 +167,6 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-
     private IEnumerator FadeOutAndEnd()
     {
         blackFade.gameObject.SetActive(true);
@@ -160,11 +182,20 @@ public class DialogueManager : MonoBehaviour
 
         dialogueUI.SetActive(false);
         dialogueActive = false;
+
+        EnablePlayerInput();
+
+        if (currentSequence != null && currentSequence.playBGM && currentSequence.bgmClip != null && previousBGM != null)
+        {
+            yield return StartCoroutine(FadeOutAndChangeBGM(previousBGM));
+        }
+        else if (currentSequence != null && currentSequence.playBGM && currentSequence.bgmClip != null && defaultBGM != null)
+        {
+            yield return StartCoroutine(FadeOutAndChangeBGM(defaultBGM));
+        }
+
         currentSequence = null;
 
-        EnablePlayerInput(); // Renable input here
-
-        
         if (onDialogueEnd != null)
         {
             onDialogueEnd.Invoke();
@@ -173,7 +204,7 @@ public class DialogueManager : MonoBehaviour
         else if (!string.IsNullOrEmpty(sceneToLoadAfterDialogue))
         {
             SceneManager.LoadScene(sceneToLoadAfterDialogue);
-            sceneToLoadAfterDialogue = null; // Clear to avoid leftover
+            sceneToLoadAfterDialogue = null;
         }
         else
         {
@@ -181,7 +212,33 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    // Disable player input during VN
+    private IEnumerator FadeOutAndChangeBGM(AudioClip newClip)
+    {
+        if (bgmSource == null) yield break;
+
+        float startVol = bgmSource.volume;
+        float t = 0f;
+
+        while (t < bgmFadeTime)
+        {
+            t += Time.deltaTime;
+            bgmSource.volume = Mathf.Lerp(startVol, 0f, t / bgmFadeTime);
+            yield return null;
+        }
+        bgmSource.Stop();
+        bgmSource.clip = newClip;
+        bgmSource.Play();
+
+        t = 0f;
+        while (t < bgmFadeTime)
+        {
+            t += Time.deltaTime;
+            bgmSource.volume = Mathf.Lerp(0f, startVol, t / bgmFadeTime);
+            yield return null;
+        }
+        bgmSource.volume = startVol;
+    }
+
     private void DisablePlayerInput()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -209,6 +266,5 @@ public class DialogueManager : MonoBehaviour
             currentIndex--;
             ShowLine();
         }
-        // testing backtrack method
     }
 }

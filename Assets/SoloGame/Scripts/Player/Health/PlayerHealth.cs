@@ -10,11 +10,11 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Invincibility & Knockdown")]
     public float invincibleTime = 0.8f;
-    public float knockdownComboWindow = 1.2f; // Seconds to chain hits
+    public float knockdownComboWindow = 1.2f;
     public int hitsForKnockdown = 3;
 
     [Header("UI")]
-    public Scrollbar healthBar; 
+    public Scrollbar healthBar;
 
     [Header("References")]
     public SpriteRenderer spriteRenderer;
@@ -52,7 +52,6 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isInvincible || isKnockedDown || isDead) return;
 
-        // Combo knockdown logic
         float now = Time.time;
         if (now - lastHitTime < knockdownComboWindow)
             consecutiveHits++;
@@ -73,7 +72,6 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-        // Knockdown if enough hits in quick succession
         if (consecutiveHits >= hitsForKnockdown)
         {
             StartCoroutine(KnockdownCoroutine());
@@ -84,17 +82,15 @@ public class PlayerHealth : MonoBehaviour
     void UpdateUI()
     {
         if (healthBar)
-            healthBar.size = (float)currentHealth / maxHealth; // Use size for Scrollbar fill!
+            healthBar.size = (float)currentHealth / maxHealth;
     }
 
     IEnumerator HitFeedback()
     {
         isInvincible = true;
 
-        // Flash red
         if (spriteRenderer) spriteRenderer.color = Color.red;
 
-        // Hit pause/freeze
         float freeze = 0.07f;
         float t = 0;
         while (t < freeze)
@@ -103,7 +99,6 @@ public class PlayerHealth : MonoBehaviour
             yield return null;
         }
 
-        // Shake
         Vector3 originalPos = transform.position;
         for (int i = 0; i < shakeCount; i++)
         {
@@ -112,7 +107,6 @@ public class PlayerHealth : MonoBehaviour
         }
         transform.position = originalPos;
 
-        // Restore color
         if (spriteRenderer) spriteRenderer.color = baseColor;
 
         yield return new WaitForSeconds(invincibleTime - freeze);
@@ -126,13 +120,12 @@ public class PlayerHealth : MonoBehaviour
         isInvincible = true;
         if (playerInput) playerInput.SetInputEnabled(false);
 
-        // Knockback arc (simulate thrown back)
         float arcDuration = 0.45f;
         float arcHeight = 1.5f;
         float arcDistance = 2f;
 
         Vector3 start = transform.position;
-        float direction = spriteRenderer && spriteRenderer.flipX ? 1f : -1f; // FlipX = facing left
+        float direction = spriteRenderer && spriteRenderer.flipX ? 1f : -1f;
 
         Vector3 target = start + new Vector3(direction * arcDistance, 0, 0);
 
@@ -149,7 +142,6 @@ public class PlayerHealth : MonoBehaviour
         }
         transform.position = new Vector3(target.x, start.y, start.z);
 
-        // Get up animation pause
         yield return new WaitForSeconds(0.45f);
 
         isKnockedDown = false;
@@ -169,7 +161,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (GameManager.Instance)
         {
-            GameManager.Instance.LoadScene("Overworld", true);
+            GameManager.Instance.LoadScene("Overworld", true); // <-- This triggers defeat dialogue if flag is set
         }
     }
 

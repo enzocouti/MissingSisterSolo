@@ -69,3 +69,5 @@ MonoBehaviour:
     leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
     rightPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
     highlightSide: 1
+  bgmClip: {fileID: 8300000, guid: 25ba8a9fc361c03479d1d0c1b8982de7, type: 3}
+  playBGM: 1
