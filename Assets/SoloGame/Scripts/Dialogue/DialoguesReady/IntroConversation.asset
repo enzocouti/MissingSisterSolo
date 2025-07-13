@@ -20,54 +20,54 @@ MonoBehaviour:
     highlightSide: 1
   - speakerName: Robert
     lineText: '"Wake up brawler... you are having nightmares again..."'
-    leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2226042836313400744, guid: eaf294c3aef81374bb536d1468626bbe, type: 3}
     highlightSide: 2
   - speakerName: Beatrice
     lineText: '"Ah... what do you want rob?"'
-    leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2226042836313400744, guid: eaf294c3aef81374bb536d1468626bbe, type: 3}
     highlightSide: 1
   - speakerName: Robert
     lineText: '"Got news about your sister."'
-    leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2226042836313400744, guid: eaf294c3aef81374bb536d1468626bbe, type: 3}
     highlightSide: 2
   - speakerName: Robert
     lineText: '"Something big is happening on that skyscraper..."'
-    leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2226042836313400744, guid: eaf294c3aef81374bb536d1468626bbe, type: 3}
     highlightSide: 2
   - speakerName: Robert
     lineText: '"But it is filled with those shitty enforcers..."'
-    leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2226042836313400744, guid: eaf294c3aef81374bb536d1468626bbe, type: 3}
     highlightSide: 2
   - speakerName: Beatrice
     lineText: '"I dont care about enforcers... what should I do?"'
-    leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2226042836313400744, guid: eaf294c3aef81374bb536d1468626bbe, type: 3}
     highlightSide: 1
   - speakerName: Robert
     lineText: '"There are some gang hideouts nearby, go kick some ass and spread
       the enforcers around"'
-    leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2226042836313400744, guid: eaf294c3aef81374bb536d1468626bbe, type: 3}
     highlightSide: 2
   - speakerName: Robert
     lineText: '"..."'
-    leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2226042836313400744, guid: eaf294c3aef81374bb536d1468626bbe, type: 3}
     highlightSide: 2
   - speakerName: Robert
     lineText: '"I know it has been years and you miss her but... be careful kid"'
-    leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2226042836313400744, guid: eaf294c3aef81374bb536d1468626bbe, type: 3}
     highlightSide: 2
   - speakerName: Beatrice
     lineText: '"Will do, thanks old man... im heading out"'
-    leftPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2226042836313400744, guid: eaf294c3aef81374bb536d1468626bbe, type: 3}
     highlightSide: 1
   bgmClip: {fileID: 8300000, guid: 25ba8a9fc361c03479d1d0c1b8982de7, type: 3}
   playBGM: 1

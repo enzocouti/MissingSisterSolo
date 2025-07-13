@@ -47,6 +47,9 @@ TagManager:
   - name: Background
     uniqueID: 429889853
     locked: 0
+  - name: flooring
+    uniqueID: 807307241
+    locked: 0
   - name: Buildings
     uniqueID: 3781559903
     locked: 0

@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: AlphaBaseBoss
   m_EditorClassIdentifier: 
   lines:
-  - speakerName: Mob Boss
-    lineText: '"Who the hell are you?"'
-    leftPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  - speakerName: The Boss
+    lineText: '"Who the fuck are you?"'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -7772638213977056830, guid: 29c9cde508fb8054a92801ed6eead9a8, type: 3}
     highlightSide: 2
   - speakerName: Beatrice
     lineText: '"Shut up and fight"'
-    leftPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-    rightPortrait: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -7772638213977056830, guid: 29c9cde508fb8054a92801ed6eead9a8, type: 3}
     highlightSide: 1
+  bgmClip: {fileID: 0}
+  playBGM: 1
