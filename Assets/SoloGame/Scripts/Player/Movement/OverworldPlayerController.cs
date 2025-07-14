@@ -1,52 +1,59 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Handles movement in overworld using player input system
-
 [RequireComponent(typeof(Rigidbody2D))]
 public class OverworldPlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 4.0f;
 
     private Rigidbody2D rb;
+    private Animator animator;
     private Vector2 moveInput;
-    private PlayerInputActions inputActions;
+    private Vector2 lastMoveDir = Vector2.down; // Default facing down
+
     private bool inputEnabled = true;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        inputActions = new PlayerInputActions();
+        animator = GetComponent<Animator>();
+    }
 
-        inputActions.Player.Move.performed += ctx =>
+    // --- DialogueManager support ---
+    public void SetInputEnabled(bool enabled)
+    {
+        inputEnabled = enabled;
+        if (!enabled)
+            moveInput = Vector2.zero;
+    }
+
+    // Input System (Player Input component "Move" event)
+    public void OnMove(InputValue value)
+    {
+        if (!inputEnabled)
         {
-            if (inputEnabled)
-                moveInput = ctx.ReadValue<Vector2>();
-            else
-                moveInput = Vector2.zero;
-        };
-        inputActions.Player.Move.canceled += ctx => moveInput = Vector2.zero;
-    }
+            moveInput = Vector2.zero;
+            return;
+        }
+        moveInput = value.Get<Vector2>();
 
-    private void OnEnable()
-    {
-        inputActions.Player.Enable();
-    }
-
-    private void OnDisable()
-    {
-        inputActions.Player.Disable();
+        if (moveInput.sqrMagnitude > 0.01f) // Update last move direction only if actually moving
+        {
+            lastMoveDir = moveInput.normalized;
+        }
     }
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
-    }
+        // --- Movement ---
+        if (inputEnabled && moveInput.sqrMagnitude > 0.01f)
+        {
+            rb.MovePosition(rb.position + moveInput.normalized * moveSpeed * Time.fixedDeltaTime);
+        }
 
-    // dialogue lock movement
-    public void SetInputEnabled(bool enabled)
-    {
-        inputEnabled = enabled;
-        if (!enabled) moveInput = Vector2.zero;
+        // --- Animation blend tree control ---
+        Vector2 animDir = moveInput.sqrMagnitude > 0.01f ? moveInput.normalized : lastMoveDir;
+        animator.SetFloat("MoveX", animDir.x);
+        animator.SetFloat("MoveY", animDir.y);
     }
 }
