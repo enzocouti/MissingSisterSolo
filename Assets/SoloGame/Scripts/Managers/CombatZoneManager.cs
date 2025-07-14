@@ -4,9 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-
-// Manages the wave system UI boss VN and base completion
-
+// Manages enemy waves, boss VN, and base completion
 public class CombatZoneManager : MonoBehaviour
 {
     public static CombatZoneManager Instance;
@@ -102,6 +100,7 @@ public class CombatZoneManager : MonoBehaviour
         blockade3?.SetActive(true);
         goText.SetActive(false);
 
+        // Only triggers dialogue, which will handle input/UI
         dialogueManager.onDialogueEnd = () =>
         {
             StartCoroutine(HandleBossFight());
@@ -135,7 +134,6 @@ public class CombatZoneManager : MonoBehaviour
         GameManager.Instance.LoadScene(overworldSceneName);
     }
 
-
     // Optional Debug keys
     private void Update()
     {
@@ -153,7 +151,7 @@ public class CombatZoneManager : MonoBehaviour
         }
     }
 
-    public void NotifyEnemyKilled(GameObject enemy) //notification communication
+    public void NotifyEnemyKilled(GameObject enemy)
     {
         if (currentEnemies.Contains(enemy))
         {

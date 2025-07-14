@@ -30,3 +30,4 @@ MonoBehaviour:
     highlightSide: 1
   bgmClip: {fileID: 0}
   playBGM: 1
+  disablePlayerInput: 1

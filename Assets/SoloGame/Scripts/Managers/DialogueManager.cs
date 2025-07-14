@@ -16,6 +16,9 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Image rightPortrait;
     [SerializeField] private Image blackFade;
 
+    [Header("Extra UI to Hide")]
+    [SerializeField] private GameObject[] uiToHideDuringDialogue; // <- assign UI/Canvas here
+
     [Header("Audio")]
     [SerializeField] private AudioSource bgmSource;
     [SerializeField] private AudioSource sfxSource;
@@ -29,6 +32,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color fadedColor = new Color(1, 1, 1, 0.4f);
     [SerializeField] private float bgmFadeTime = 1.2f;
+    [SerializeField] private float fadeDuration = 0.8f; // NEW: Adjust fade speed in Inspector
 
     [SerializeField] public string sceneToLoadAfterDialogue;
     public System.Action onDialogueEnd;
@@ -79,7 +83,13 @@ public class DialogueManager : MonoBehaviour
             previousBGM = bgmSource != null ? bgmSource.clip : null;
         }
 
-        DisablePlayerInput();
+        // Hide extra UI if needed
+        HideExtraUI();
+
+        // Lock player input if requested
+        if (sequence.disablePlayerInput)
+            DisablePlayerInput();
+
         StartCoroutine(FadeInAndBegin());
     }
 
@@ -88,7 +98,7 @@ public class DialogueManager : MonoBehaviour
         blackFade.gameObject.SetActive(true);
         blackFade.color = Color.black;
 
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(fadeDuration * 0.3f); // short pause before fade
 
         dialogueUI.SetActive(true);
         ShowLine();
@@ -96,7 +106,7 @@ public class DialogueManager : MonoBehaviour
         float t = 0;
         while (t < 1f)
         {
-            t += Time.deltaTime * 2;
+            t += Time.deltaTime / fadeDuration;
             blackFade.color = Color.Lerp(Color.black, Color.clear, t);
             yield return null;
         }
@@ -175,7 +185,7 @@ public class DialogueManager : MonoBehaviour
         float t = 0;
         while (t < 1f)
         {
-            t += Time.deltaTime * 2;
+            t += Time.deltaTime / fadeDuration;
             blackFade.color = Color.Lerp(Color.clear, Color.black, t);
             yield return null;
         }
@@ -183,8 +193,14 @@ public class DialogueManager : MonoBehaviour
         dialogueUI.SetActive(false);
         dialogueActive = false;
 
-        EnablePlayerInput();
+        // Show UI back if it was hidden
+        ShowExtraUI();
 
+        // Restore input if needed
+        if (currentSequence != null && currentSequence.disablePlayerInput)
+            EnablePlayerInput();
+
+        // Restore previous/default BGM if needed
         if (currentSequence != null && currentSequence.playBGM && currentSequence.bgmClip != null && previousBGM != null)
         {
             yield return StartCoroutine(FadeOutAndChangeBGM(previousBGM));
@@ -239,13 +255,30 @@ public class DialogueManager : MonoBehaviour
         bgmSource.volume = startVol;
     }
 
+    private void HideExtraUI()
+    {
+        if (uiToHideDuringDialogue == null) return;
+        foreach (var go in uiToHideDuringDialogue)
+            if (go != null) go.SetActive(false);
+    }
+    private void ShowExtraUI()
+    {
+        if (uiToHideDuringDialogue == null) return;
+        foreach (var go in uiToHideDuringDialogue)
+            if (go != null) go.SetActive(true);
+    }
+
     private void DisablePlayerInput()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
-            PlayerCombatInput input = player.GetComponent<PlayerCombatInput>();
-            input?.SetInputEnabled(false);
+            
+            var combatInput = player.GetComponent<PlayerCombatInput>();
+            combatInput?.SetInputEnabled(false);
+            
+            var overworldInput = player.GetComponent<OverworldPlayerController>();
+            overworldInput?.SetInputEnabled(false);
         }
     }
 
@@ -254,8 +287,12 @@ public class DialogueManager : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
-            PlayerCombatInput input = player.GetComponent<PlayerCombatInput>();
-            input?.SetInputEnabled(true);
+            
+            var combatInput = player.GetComponent<PlayerCombatInput>();
+            combatInput?.SetInputEnabled(true);
+            
+            var overworldInput = player.GetComponent<OverworldPlayerController>();
+            overworldInput?.SetInputEnabled(true);
         }
     }
 

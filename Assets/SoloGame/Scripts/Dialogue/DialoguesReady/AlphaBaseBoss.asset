@@ -16,12 +16,12 @@ MonoBehaviour:
   - speakerName: The Boss
     lineText: '"Who the fuck are you?"'
     leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
-    rightPortrait: {fileID: -7772638213977056830, guid: 29c9cde508fb8054a92801ed6eead9a8, type: 3}
+    rightPortrait: {fileID: 2253639577306037883, guid: 4b3a6b41d7df688418acafd4276e9989, type: 3}
     highlightSide: 2
   - speakerName: Beatrice
     lineText: '"Shut up and fight"'
     leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
-    rightPortrait: {fileID: -7772638213977056830, guid: 29c9cde508fb8054a92801ed6eead9a8, type: 3}
+    rightPortrait: {fileID: 2253639577306037883, guid: 4b3a6b41d7df688418acafd4276e9989, type: 3}
     highlightSide: 1
   bgmClip: {fileID: 0}
   playBGM: 1

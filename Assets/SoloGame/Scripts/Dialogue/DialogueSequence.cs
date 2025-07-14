@@ -5,7 +5,10 @@ public class DialogueSequence : ScriptableObject
 {
     public DialogueLine[] lines;
 
-    [Header("BGM Options")]
-    public AudioClip bgmClip;        //Set to use custom BGM for this dialogue
-    public bool playBGM = true;      // If false, keeps current BGM 
+    
+    public AudioClip bgmClip;
+    public bool playBGM = true;
+
+    
+    public bool disablePlayerInput = true; // Set this per-dialogue
 }
