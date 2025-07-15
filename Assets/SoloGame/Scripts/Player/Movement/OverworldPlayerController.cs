@@ -1,25 +1,21 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class OverworldPlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 4.0f;
+    public float moveSpeed = 4f;
+    Rigidbody2D rb;
+    Animator animator;
+    Vector2 moveInput;
+    Vector2 lastDir = Vector2.down; // Default facing down
+    bool inputEnabled = true;
 
-    private Rigidbody2D rb;
-    private Animator animator;
-    private Vector2 moveInput;
-    private Vector2 lastMoveDir = Vector2.down; // Default facing down
-
-    private bool inputEnabled = true;
-
-    private void Awake()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
 
-    // --- DialogueManager support ---
     public void SetInputEnabled(bool enabled)
     {
         inputEnabled = enabled;
@@ -27,7 +23,7 @@ public class OverworldPlayerController : MonoBehaviour
             moveInput = Vector2.zero;
     }
 
-    // Input System (Player Input component "Move" event)
+    // Called by PlayerInput "Move" action
     public void OnMove(InputValue value)
     {
         if (!inputEnabled)
@@ -36,24 +32,34 @@ public class OverworldPlayerController : MonoBehaviour
             return;
         }
         moveInput = value.Get<Vector2>();
+    }
 
-        if (moveInput.sqrMagnitude > 0.01f) // Update last move direction only if actually moving
+    void FixedUpdate()
+    {
+        Vector2 snapped = SnapToCardinal(moveInput);
+
+        // --- MOVEMENT ---
+        if (inputEnabled && snapped != Vector2.zero)
         {
-            lastMoveDir = moveInput.normalized;
+            lastDir = snapped;
+            rb.MovePosition(rb.position + snapped * moveSpeed * Time.fixedDeltaTime);
+            animator.SetBool("isMoving", true);
+            animator.SetFloat("MoveX", snapped.x);
+            animator.SetFloat("MoveY", snapped.y);
+        }
+        else
+        {
+            // When idle, set isMoving false, but keep facing last direction
+            animator.SetBool("isMoving", false);
+            animator.SetFloat("MoveX", lastDir.x);
+            animator.SetFloat("MoveY", lastDir.y);
         }
     }
 
-    private void FixedUpdate()
+    // Helper: snap to up/down/left/right (no diagonals)
+    Vector2 SnapToCardinal(Vector2 v)
     {
-        // --- Movement ---
-        if (inputEnabled && moveInput.sqrMagnitude > 0.01f)
-        {
-            rb.MovePosition(rb.position + moveInput.normalized * moveSpeed * Time.fixedDeltaTime);
-        }
-
-        // --- Animation blend tree control ---
-        Vector2 animDir = moveInput.sqrMagnitude > 0.01f ? moveInput.normalized : lastMoveDir;
-        animator.SetFloat("MoveX", animDir.x);
-        animator.SetFloat("MoveY", animDir.y);
+        if (v == Vector2.zero) return Vector2.zero;
+        return (Mathf.Abs(v.x) > Mathf.Abs(v.y)) ? new Vector2(Mathf.Sign(v.x), 0) : new Vector2(0, Mathf.Sign(v.y));
     }
 }
