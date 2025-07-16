@@ -125,7 +125,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: steelgutsbase
     originalName: 
-    pivot: {x: 0.45121953, y: -0.1764706}
+    pivot: {x: 0.45238096, y: -0.16504854}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -133,8 +133,8 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 82
-      height: 102
+      width: 84
+      height: 103
     spriteID: 4625b729907551f4c89855c7fd21bedd
     spriteBone: []
     spriteOutline: []
@@ -157,10 +157,10 @@ ScriptedImporter:
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 30
-        y: 18
-        width: 82
-        height: 102
+        x: 29
+        y: 17
+        width: 84
+        height: 103
       spriteId: 4625b729907551f4c89855c7fd21bedd
     linkedCells: []
     parentIndex: -1
