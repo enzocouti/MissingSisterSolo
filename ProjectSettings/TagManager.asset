@@ -53,6 +53,9 @@ TagManager:
   - name: BackBuildings
     uniqueID: 3483211203
     locked: 0
+  - name: MiddleBuildings
+    uniqueID: 1984861151
+    locked: 0
   - name: Front Buildings
     uniqueID: 3781559903
     locked: 0

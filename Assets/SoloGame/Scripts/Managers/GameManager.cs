@@ -5,13 +5,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public static bool ShouldPlayFailureDialogue = false; // Set to true to play defeat dialogue on next scene load
+
     private bool isAlphaBaseCleared = false;
     private bool isBravoBaseCleared = false;
     private bool hasUnlockedSkyscraper = false;
     public DialogueSequence failureDialogue;
     [SerializeField] private int skullCount = 0;
-
-    private bool shouldPlayFailureDialogue = false;
 
     private void Awake()
     {
@@ -67,13 +67,13 @@ public class GameManager : MonoBehaviour
     public int GetSkullCount() => skullCount;
     public bool IsSkyscraperUnlocked() => hasUnlockedSkyscraper;
 
-    // Scene loader. If playFailureDialogue is true, triggers defeat dialogue after Overworld loads.
+    // MAIN universal scene loader for respawn, handles defeat dialogue trigger via static flag.
     public void LoadScene(string sceneName, bool playFailureDialogue = false)
     {
         if (!string.IsNullOrWhiteSpace(sceneName))
         {
-            shouldPlayFailureDialogue = playFailureDialogue;
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            ShouldPlayFailureDialogue = playFailureDialogue;
+            SceneManager.sceneLoaded += OnSceneLoaded; // Register
             SceneManager.LoadScene(sceneName);
         }
         else
@@ -84,13 +84,14 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (shouldPlayFailureDialogue)
+        // Use DialogueManager if present and we need to play the defeat dialogue
+        if (ShouldPlayFailureDialogue && failureDialogue != null)
         {
-            shouldPlayFailureDialogue = false;
-            if (DialogueManager.Instance != null && failureDialogue != null)
-                DialogueManager.Instance.StartDialogue(failureDialogue);
+            ShouldPlayFailureDialogue = false;
+            if (DialogueManager.Instance != null)
+                DialogueManager.Instance.PlayDefeatDialogueAfterSceneLoad();
         }
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded; // Always unregister!
     }
 
     // For debug/testing: manually play defeat dialogue

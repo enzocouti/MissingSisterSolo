@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 850133176e21edd4e9636b729a2cf1a4
+guid: f9ec2918034ce8c4d8f6d72cabb2ce33
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -36,7 +36,7 @@ ScriptedImporter:
     spriteMeshType: 1
     alignment: 0
     spritePivot: {x: 0.5, y: 0.5}
-    spritePixelsToUnits: 9
+    spritePixelsToUnits: 8
     spriteBorder: {x: 0, y: 0, z: 0, w: 0}
     spriteGenerateFallbackPhysicsShape: 0
     generateCubemap: 6
@@ -98,7 +98,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638882900562492215
+  platformSettingsDirtyTick: 638882911254152971
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -123,9 +123,9 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: FourBuild
+  - name: SideBuildTwo
     originalName: 
-    pivot: {x: 0.53333336, y: -0.25287357}
+    pivot: {x: 0.47619048, y: -0.081818186}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -133,9 +133,9 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 60
-      height: 87
-    spriteID: c03cdb85ad811f9468cb601f84ea10b6
+      width: 63
+      height: 110
+    spriteID: f8adc3f8bd19b664ba95365da3ac3307
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -147,21 +147,21 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -1353052994
-    name: FourBuild
+    guid: -1460942623
+    name: SideBuildTwo
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: FourBuild
+    - name: SideBuildTwo
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 34
-        y: 22
-        width: 60
-        height: 87
-      spriteId: c03cdb85ad811f9468cb601f84ea10b6
+        x: 36
+        y: 9
+        width: 63
+        height: 110
+      spriteId: f8adc3f8bd19b664ba95365da3ac3307
     linkedCells: []
     parentIndex: -1
   platformSettings:

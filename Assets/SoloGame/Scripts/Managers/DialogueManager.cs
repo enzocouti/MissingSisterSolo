@@ -17,7 +17,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Image blackFade;
 
     [Header("Extra UI to Hide")]
-    [SerializeField] private GameObject[] uiToHideDuringDialogue; // <- assign UI/Canvas here
+    [SerializeField] private GameObject[] uiToHideDuringDialogue;
 
     [Header("Audio")]
     [SerializeField] private AudioSource bgmSource;
@@ -32,7 +32,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color fadedColor = new Color(1, 1, 1, 0.4f);
     [SerializeField] private float bgmFadeTime = 1.2f;
-    [SerializeField] private float fadeDuration = 0.8f; // NEW: Adjust fade speed in Inspector
+    [SerializeField] private float fadeDuration = 0.8f;
 
     [SerializeField] public string sceneToLoadAfterDialogue;
     public System.Action onDialogueEnd;
@@ -47,8 +47,20 @@ public class DialogueManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null) Destroy(gameObject);
-        else Instance = this;
+        if (Instance != null)
+            Destroy(gameObject);
+        else
+            Instance = this;
+    }
+
+    // UNIVERSAL METHOD FOR DEFEAT DIALOGUE after respawn pleasw work
+    public void PlayDefeatDialogueAfterSceneLoad()
+    {
+        // Play defeat dialogue with player control locked 
+        if (GameManager.Instance != null && GameManager.Instance.failureDialogue != null)
+        {
+            StartDialogue(GameManager.Instance.failureDialogue);
+        }
     }
 
     private void Update()
@@ -86,7 +98,7 @@ public class DialogueManager : MonoBehaviour
         // Hide extra UI if needed
         HideExtraUI();
 
-        // Lock player input if requested
+        // Lock player input if requested (recommended: set disablePlayerInput=true on ScriptableObject)
         if (sequence.disablePlayerInput)
             DisablePlayerInput();
 
@@ -273,10 +285,9 @@ public class DialogueManager : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
-            
             var combatInput = player.GetComponent<PlayerCombatInput>();
             combatInput?.SetInputEnabled(false);
-            
+
             var overworldInput = player.GetComponent<OverworldPlayerController>();
             overworldInput?.SetInputEnabled(false);
         }
@@ -287,10 +298,9 @@ public class DialogueManager : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
-            
             var combatInput = player.GetComponent<PlayerCombatInput>();
             combatInput?.SetInputEnabled(true);
-            
+
             var overworldInput = player.GetComponent<OverworldPlayerController>();
             overworldInput?.SetInputEnabled(true);
         }

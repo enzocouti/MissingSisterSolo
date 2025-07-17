@@ -973,6 +973,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1779450419}
     - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: fadeDuration
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
       propertyPath: leftPortrait
       value: 
       objectReference: {fileID: 1779450422}
