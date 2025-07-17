@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-// Manages enemy waves, boss VN, and base completion
 public class CombatZoneManager : MonoBehaviour
 {
     public static CombatZoneManager Instance;
@@ -27,9 +26,11 @@ public class CombatZoneManager : MonoBehaviour
     public GameObject goText;
     public GameObject baseClearedText;
     public GameObject bossHealthUI;
+    public GameObject defeatBlackout; 
 
     [Header("Boss VN")]
     public DialogueSequence bossDialogueData;
+    public DialogueSequence defeatDialogue; 
     public DialogueManager dialogueManager;
 
     [Header("Settings")]
@@ -49,6 +50,7 @@ public class CombatZoneManager : MonoBehaviour
         if (goText) goText.SetActive(true);
         if (baseClearedText) baseClearedText.SetActive(false);
         if (bossHealthUI) bossHealthUI.SetActive(false);
+        if (defeatBlackout) defeatBlackout.SetActive(false);
 
         blockade1?.SetActive(false);
         blockade2?.SetActive(false);
@@ -100,7 +102,6 @@ public class CombatZoneManager : MonoBehaviour
         blockade3?.SetActive(true);
         goText.SetActive(false);
 
-        // Only triggers dialogue, which will handle input/UI
         dialogueManager.onDialogueEnd = () =>
         {
             StartCoroutine(HandleBossFight());
@@ -115,7 +116,6 @@ public class CombatZoneManager : MonoBehaviour
         bossHealthUI?.SetActive(true);
         currentBoss = Instantiate(bossPrefab, spawnPoint3.position, Quaternion.identity);
 
-        // Assign health bar to boss after spawning
         BossHealth bossHealth = currentBoss.GetComponent<BossHealth>();
         if (bossHealth != null && bossHealthUI != null)
         {
@@ -134,7 +134,34 @@ public class CombatZoneManager : MonoBehaviour
         GameManager.Instance.LoadScene(overworldSceneName);
     }
 
-    // Optional Debug keys
+    
+    public void HandlePlayerDefeat()
+    {
+        StartCoroutine(HandlePlayerDefeatRoutine());
+    }
+
+    private IEnumerator HandlePlayerDefeatRoutine()
+    {
+        if (defeatBlackout != null)
+            defeatBlackout.SetActive(true);
+
+        if (dialogueManager != null && defeatDialogue != null)
+        {
+            dialogueManager.StartDialogue(defeatDialogue);
+            dialogueManager.onDialogueEnd = () =>
+            {
+                GameManager.Instance.LoadScene(overworldSceneName);
+            };
+        }
+        else
+        {
+            GameManager.Instance.LoadScene(overworldSceneName);
+        }
+
+        yield return null;
+    }
+
+   
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha9))

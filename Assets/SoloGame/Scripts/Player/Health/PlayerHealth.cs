@@ -157,11 +157,15 @@ public class PlayerHealth : MonoBehaviour
         yield return StartCoroutine(KnockdownCoroutine());
         yield return new WaitForSeconds(0.3f);
 
-        gameObject.SetActive(false);
-
-        if (GameManager.Instance)
+        
+        if (CombatZoneManager.Instance != null)
         {
-            GameManager.Instance.LoadScene("Overworld", true); // <-- This triggers defeat dialogue if flag is set
+            CombatZoneManager.Instance.HandlePlayerDefeat();
+        }
+        else
+        {
+            
+            GameManager.Instance?.LoadScene("Overworld");
         }
     }
 

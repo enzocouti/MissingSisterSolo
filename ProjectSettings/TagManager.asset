@@ -74,5 +74,8 @@ TagManager:
   - name: Enemy
     uniqueID: 2910098221
     locked: 0
+  - name: Blackout
+    uniqueID: 1341670693
+    locked: 0
   m_RenderingLayers:
   - Default

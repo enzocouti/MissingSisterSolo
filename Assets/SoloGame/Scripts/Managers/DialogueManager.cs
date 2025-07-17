@@ -53,13 +53,13 @@ public class DialogueManager : MonoBehaviour
             Instance = this;
     }
 
-    // UNIVERSAL METHOD FOR DEFEAT DIALOGUE after respawn pleasw work
-    public void PlayDefeatDialogueAfterSceneLoad()
+    // For defeat blackout
+    public void ShowBlackFadeImmediately()
     {
-        // Play defeat dialogue with player control locked 
-        if (GameManager.Instance != null && GameManager.Instance.failureDialogue != null)
+        if (blackFade != null)
         {
-            StartDialogue(GameManager.Instance.failureDialogue);
+            blackFade.gameObject.SetActive(true);
+            blackFade.color = Color.black;
         }
     }
 
@@ -98,7 +98,7 @@ public class DialogueManager : MonoBehaviour
         // Hide extra UI if needed
         HideExtraUI();
 
-        // Lock player input if requested (recommended: set disablePlayerInput=true on ScriptableObject)
+        // Lock player input if requested 
         if (sequence.disablePlayerInput)
             DisablePlayerInput();
 
@@ -314,4 +314,5 @@ public class DialogueManager : MonoBehaviour
             ShowLine();
         }
     }
+    
 }
