@@ -4,26 +4,19 @@ public class PlayerHitbox : MonoBehaviour
 {
     public PlayerAttackData attackData;
 
-    private void Start()
-    {
-        Destroy(gameObject, attackData.attackDuration);
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
-        {
-            Debug.Log($"{attackData.attackName} hit {other.name}");
+        if (!other.CompareTag("Enemy")) return;
 
-            var bossHealth = other.GetComponent<BossHealth>();
-            var enemyHealth = other.GetComponent<EnemyHealth>();
-            var playerCombat = GetComponentInParent<PlayerCombat>();
-            bool playerIsFacingRight = playerCombat ? playerCombat.isFacingRight : true;
+        var enemyHealth = other.GetComponent<EnemyHealth>();
+        var bossHealth = other.GetComponent<BossHealth>();
 
-            if (bossHealth != null)
-                bossHealth.TakeDamage(attackData, playerIsFacingRight);
-            else if (enemyHealth != null)
-                enemyHealth.TakeDamage(attackData, playerIsFacingRight);
-        }
+        var playerCombat = GetComponentInParent<PlayerCombat>();
+        bool facingRight = playerCombat ? playerCombat.isFacingRight : true;
+
+        if (enemyHealth)
+            enemyHealth.TakeDamage(attackData, facingRight);
+        else if (bossHealth)
+            bossHealth.TakeDamage(attackData, facingRight);
     }
 }

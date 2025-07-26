@@ -12,14 +12,13 @@ GameObject:
   - component: {fileID: 116088138393488863}
   - component: {fileID: 7569330802048851124}
   - component: {fileID: 5303424496487369442}
-  - component: {fileID: 2509045803240025551}
-  - component: {fileID: 6210966951916511927}
-  - component: {fileID: 940736084987223559}
-  - component: {fileID: 8443096661765868198}
   - component: {fileID: 3473221098959847161}
+  - component: {fileID: -543812662113188901}
+  - component: {fileID: 2162243594883850588}
+  - component: {fileID: -5158203011117194376}
   m_Layer: 0
   m_Name: Player
-  m_TagString: PlayerOne
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -81,7 +80,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 602548077
-  m_SortingLayer: 6
+  m_SortingLayer: 9
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 0, b: 0.52359486, a: 1}
@@ -167,73 +166,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &2509045803240025551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3716531794894502517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37b42a3f26d7dcf4187d8ceea4a8b090, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6210966951916511927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3716531794894502517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5387810044bb598479b2c8e3d57d7ba3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &940736084987223559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3716531794894502517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29e295bb1e7986b4fb55bd99a3aed638, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  hitboxOrigin: {fileID: 0}
-  input: {fileID: 0}
-  stateMachine: {fileID: 2509045803240025551}
-  comboSequence: []
-  launcherAttack: {fileID: 0}
-  airLightAttack: {fileID: 0}
-  airHeavyAttack: {fileID: 0}
-  jumpHeight: 2
-  jumpDuration: 0.5
-  isFacingRight: 1
-  dashSpeed: 12
-  isAttacking: 0
-  dashDistance: 3
-  dashDuration: 0.2
-  dashIgnoreTag: Enemy
-  comboResetTime: 0.5
---- !u!114 &8443096661765868198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3716531794894502517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb5d04c5d83e03b4abcfbda9629f0269, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
 --- !u!114 &3473221098959847161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,8 +185,56 @@ MonoBehaviour:
   hitsForKnockdown: 3
   healthBar: {fileID: 0}
   spriteRenderer: {fileID: 116088138393488863}
-  playerInput: {fileID: 6210966951916511927}
+  playerInput: {fileID: 0}
   rb: {fileID: 7569330802048851124}
   flashDuration: 0.1
   shakeAmount: 0.1
   shakeCount: 2
+--- !u!114 &-543812662113188901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3716531794894502517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5387810044bb598479b2c8e3d57d7ba3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2162243594883850588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3716531794894502517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e295bb1e7986b4fb55bd99a3aed638, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundCombos: []
+  airCombos: []
+  launcherAttack: {fileID: 0}
+  hitboxOrigin: {fileID: 0}
+  comboResetTime: 0.6
+  rb: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  input: {fileID: 0}
+  stateMachine: {fileID: 0}
+  isFacingRight: 1
+  isAirborne: 0
+  isBusy: 0
+--- !u!114 &-5158203011117194376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3716531794894502517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37b42a3f26d7dcf4187d8ceea4a8b090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
