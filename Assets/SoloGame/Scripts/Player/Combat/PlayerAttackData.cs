@@ -24,4 +24,9 @@ public class PlayerAttackData : ScriptableObject
 
     [Header("Special Moves")]
     public bool isSlam = false;
+
+    [Header("Attack Flow")]
+    public float windup = 0.08f;
+    public float hitPause = 0.05f;
+    public float recovery = 0.12f;
 }

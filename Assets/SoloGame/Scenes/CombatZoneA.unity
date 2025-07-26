@@ -1137,6 +1137,7 @@ GameObject:
   - component: {fileID: 519420030}
   - component: {fileID: 519420034}
   - component: {fileID: 519420035}
+  - component: {fileID: 519420036}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1300,6 +1301,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 626703315}
   followSpeed: 5
+--- !u!114 &519420036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 855cf0f772993cc4a9119895daa4807a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &587501621
 GameObject:
   m_ObjectHideFlags: 0
@@ -6473,64 +6486,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2162243594883850588, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: groundCombos.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: rb
-      value: 
-      objectReference: {fileID: 5625569136032294535}
-    - target: {fileID: 0}
-      propertyPath: input
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: groundCheck
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: hitboxOrigin
-      value: 
-      objectReference: {fileID: 1690836914}
-    - target: {fileID: 0}
-      propertyPath: isFacingRight
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: airHeavyAttack
+    - target: {fileID: 2162243594883850588, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[0].attackData
       value: 
-      objectReference: {fileID: 11400000, guid: a4ec4249f58057c4989af690ffa790bc, type: 2}
-    - target: {fileID: 0}
-      propertyPath: airLightAttack
+      objectReference: {fileID: 11400000, guid: 938dad4df14d6754db4ae7aaa20a823a, type: 2}
+    - target: {fileID: 2162243594883850588, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[1].attackData
       value: 
-      objectReference: {fileID: 11400000, guid: 75327f073ce5c9843856e80dbcac998e, type: 2}
-    - target: {fileID: 0}
-      propertyPath: launcherAttack
-      value: 
-      objectReference: {fileID: 11400000, guid: 04b11967f6dfb0d49ac60547508cc2cb, type: 2}
-    - target: {fileID: 0}
-      propertyPath: spriteRenderer
-      value: 
-      objectReference: {fileID: 5625569136032294536}
-    - target: {fileID: 0}
-      propertyPath: groundLayer.m_Bits
-      value: 8
+      objectReference: {fileID: 11400000, guid: 938dad4df14d6754db4ae7aaa20a823a, type: 2}
+    - target: {fileID: 2162243594883850588, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[0].comboPattern
+      value: JJJ
       objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: comboSequence.Array.size
-      value: 3
+    - target: {fileID: 2162243594883850588, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[1].comboPattern
+      value: JJJ
       objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: 'comboSequence.Array.data[0]'
-      value: 
-      objectReference: {fileID: 11400000, guid: b70091dafb9c1cc4c8965106045a630a, type: 2}
-    - target: {fileID: 0}
-      propertyPath: 'comboSequence.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 35edc5d805fe77e44a07204045dc53ac, type: 2}
-    - target: {fileID: 0}
-      propertyPath: 'comboSequence.Array.data[2]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 9aff44d74c8e56247b026df430b002ab, type: 2}
     - target: {fileID: 3001479114626292222, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: m_LocalScale.y
       value: 1

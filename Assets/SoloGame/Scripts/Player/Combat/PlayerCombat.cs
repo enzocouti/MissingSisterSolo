@@ -7,6 +7,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private List<ComboEntry> groundCombos;
     [SerializeField] private List<ComboEntry> airCombos;
     [SerializeField] private PlayerAttackData launcherAttack;
+    [SerializeField] private PlayerAttackData slamAttack; 
 
     [Header("Settings")]
     public Transform hitboxOrigin;
@@ -21,6 +22,9 @@ public class PlayerCombat : MonoBehaviour
     [HideInInspector] public bool isFacingRight = true;
     [HideInInspector] public bool isAirborne = false;
     [HideInInspector] public bool isBusy = false;
+
+    [Header("Hitbox Settings")]
+    public GameObject hitboxPrefab; // Assign your PlayerHitbox prefab here in Inspector!
 
     private string currentCombo = "";
     private float comboTimer = 0f;
@@ -98,7 +102,18 @@ public class PlayerCombat : MonoBehaviour
     private void HandleLauncher()
     {
         if (isBusy) return;
-        stateMachine.ChangeState(new AttackState(this, launcherAttack));
+
+        if (isAirborne)
+        {
+            //  If airborne, use the slam attack instead of the launcher
+            if (slamAttack != null)
+                stateMachine.ChangeState(new AttackState(this, slamAttack));
+        }
+        else
+        {
+            if (launcherAttack != null)
+                stateMachine.ChangeState(new AttackState(this, launcherAttack));
+        }
     }
 
     private void HandleJump()

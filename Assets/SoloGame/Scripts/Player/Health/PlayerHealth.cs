@@ -4,27 +4,19 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Health Settings")]
     public int maxHealth = 10;
-    public int currentHealth;
+    private int currentHealth;
 
-    [Header("Invincibility & Knockdown")]
     public float invincibleTime = 0.8f;
     public float knockdownComboWindow = 1.2f;
     public int hitsForKnockdown = 3;
 
-    [Header("UI")]
     public Scrollbar healthBar;
-
-    [Header("References")]
     public SpriteRenderer spriteRenderer;
     public PlayerCombatInput playerInput;
-    public Rigidbody2D rb;
 
-    [Header("Feedback")]
-    public float flashDuration = 0.12f;
-    public float shakeAmount = 0.1f;
-    public int shakeCount = 4;
+    private Rigidbody2D rb;
+    private Color baseColor;
 
     private float lastHitTime = -99f;
     private int consecutiveHits = 0;
@@ -32,35 +24,25 @@ public class PlayerHealth : MonoBehaviour
     private bool isKnockedDown = false;
     private bool isDead = false;
 
-    private Color baseColor;
-
-    void Awake()
+    private void Awake()
     {
         currentHealth = maxHealth;
+        rb = GetComponent<Rigidbody2D>();
         if (!spriteRenderer) spriteRenderer = GetComponent<SpriteRenderer>();
-        if (!rb) rb = GetComponent<Rigidbody2D>();
         if (!playerInput) playerInput = GetComponent<PlayerCombatInput>();
-        baseColor = spriteRenderer ? spriteRenderer.color : Color.white;
-    }
-
-    void Start()
-    {
-        UpdateUI();
+        baseColor = spriteRenderer.color;
     }
 
     public void TakeDamage(int amount)
     {
-        if (isInvincible || isKnockedDown || isDead) return;
+        if (isInvincible || isDead || isKnockedDown) return;
 
         float now = Time.time;
-        if (now - lastHitTime < knockdownComboWindow)
-            consecutiveHits++;
-        else
-            consecutiveHits = 1;
+        consecutiveHits = (now - lastHitTime < knockdownComboWindow) ? consecutiveHits + 1 : 1;
         lastHitTime = now;
 
         currentHealth -= amount;
-        if (currentHealth < 0) currentHealth = 0;
+        currentHealth = Mathf.Max(0, currentHealth);
         UpdateUI();
 
         StartCoroutine(HitFeedback());
@@ -90,27 +72,19 @@ public class PlayerHealth : MonoBehaviour
         isInvincible = true;
 
         if (spriteRenderer) spriteRenderer.color = Color.red;
-
-        float freeze = 0.07f;
-        float t = 0;
-        while (t < freeze)
-        {
-            t += Time.unscaledDeltaTime;
-            yield return null;
-        }
+        yield return StartCoroutine(HitStop(0.08f));
 
         Vector3 originalPos = transform.position;
-        for (int i = 0; i < shakeCount; i++)
+        for (int i = 0; i < 4; i++)
         {
-            transform.position = originalPos + (Vector3)Random.insideUnitCircle * shakeAmount;
-            yield return new WaitForSeconds(flashDuration / shakeCount);
+            transform.position = originalPos + (Vector3)Random.insideUnitCircle * 0.08f;
+            yield return new WaitForSeconds(0.03f);
         }
+
         transform.position = originalPos;
+        spriteRenderer.color = baseColor;
 
-        if (spriteRenderer) spriteRenderer.color = baseColor;
-
-        yield return new WaitForSeconds(invincibleTime - freeze);
-
+        yield return new WaitForSeconds(invincibleTime);
         isInvincible = false;
     }
 
@@ -118,67 +92,52 @@ public class PlayerHealth : MonoBehaviour
     {
         isKnockedDown = true;
         isInvincible = true;
-        if (playerInput) playerInput.SetInputEnabled(false);
+        playerInput.SetInputEnabled(false);
 
         float arcDuration = 0.45f;
-        float arcHeight = 1.5f;
+        float arcHeight = 1.8f;
         float arcDistance = 2f;
 
         Vector3 start = transform.position;
-        float direction = spriteRenderer && spriteRenderer.flipX ? 1f : -1f;
+        float dir = spriteRenderer.flipX ? 1f : -1f;
+        Vector3 end = start + new Vector3(dir * arcDistance, 0f, 0f);
 
-        Vector3 target = start + new Vector3(direction * arcDistance, 0, 0);
-
-        float timer = 0f;
-        while (timer < arcDuration)
+        float t = 0f;
+        while (t < arcDuration)
         {
-            float progress = timer / arcDuration;
+            float progress = t / arcDuration;
             float yOffset = Mathf.Sin(progress * Mathf.PI) * arcHeight;
-            Vector3 horizontal = Vector3.Lerp(start, target, progress);
+            Vector3 horizontal = Vector3.Lerp(start, end, progress);
             transform.position = new Vector3(horizontal.x, start.y + yOffset, start.z);
 
-            timer += Time.deltaTime;
+            t += Time.deltaTime;
             yield return null;
         }
-        transform.position = new Vector3(target.x, start.y, start.z);
 
-        yield return new WaitForSeconds(0.45f);
+        transform.position = new Vector3(end.x, start.y, start.z);
+        yield return new WaitForSeconds(0.5f);
 
         isKnockedDown = false;
         isInvincible = false;
-        if (playerInput) playerInput.SetInputEnabled(true);
+        playerInput.SetInputEnabled(true);
     }
 
     IEnumerator HandleDeath()
     {
-        isInvincible = true;
-        if (playerInput) playerInput.SetInputEnabled(false);
-
+        playerInput.SetInputEnabled(false);
         yield return StartCoroutine(KnockdownCoroutine());
         yield return new WaitForSeconds(0.3f);
 
-        
-        if (CombatZoneManager.Instance != null)
-        {
-            CombatZoneManager.Instance.HandlePlayerDefeat();
-        }
-        else
-        {
-            
-            GameManager.Instance?.LoadScene("Overworld");
-        }
+        gameObject.SetActive(false);
+
+        GameManager.Instance.LoadScene("Overworld");
     }
 
-    void Update()
+    IEnumerator HitStop(float duration)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        if (Input.GetKeyDown(KeyCode.Alpha8) && !isDead)
-        {
-            Debug.Log("[DEBUG] Forcing player death!");
-            currentHealth = 0;
-            UpdateUI();
-            StartCoroutine(HandleDeath());
-        }
-#endif
+        Time.timeScale = 0f;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1f;
     }
 }
+

@@ -21,7 +21,7 @@ MonoBehaviour:
   isLauncher: 1
   launchHeight: 2.5
   launchDuration: 0.4
-  launchHangTime: 0.15
+  launchHangTime: 0.2
   animationTriggerName: Launcher
   knockbackForce: 2.5
   isSlam: 0

@@ -10,7 +10,12 @@ public class SideCameraFollow : MonoBehaviour
     private bool isLocked = false;
     private float lockedX;
 
-    private void Awake() => Instance = this;
+    private Vector3 shakeOffset = Vector3.zero;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void LateUpdate()
     {
@@ -23,7 +28,7 @@ public class SideCameraFollow : MonoBehaviour
         else
             target = new Vector3(player.position.x, transform.position.y, transform.position.z);
 
-        transform.position = Vector3.Lerp(transform.position, target, followSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, target + shakeOffset, followSpeed * Time.deltaTime);
     }
 
     public void LockToX(float x)
@@ -35,5 +40,10 @@ public class SideCameraFollow : MonoBehaviour
     public void Unlock()
     {
         isLocked = false;
+    }
+
+    public void SetShakeOffset(Vector3 offset)
+    {
+        shakeOffset = offset;
     }
 }

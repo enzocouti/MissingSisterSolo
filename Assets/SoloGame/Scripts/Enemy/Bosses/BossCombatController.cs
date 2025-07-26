@@ -1,110 +1,105 @@
 using UnityEngine;
 using System.Collections;
 
-// Boss inherits everything from normal enemy
 public class BossCombatController : EnemyCombatController
 {
-    public enum BossAttackType { Slam, Dash }
-    public BossAttackType bossAttackType = BossAttackType.Slam;
+    public enum BossSpecialType { None, AreaAttack, Dash }
+    public BossSpecialType specialType = BossSpecialType.AreaAttack;
 
-    [Header("Slam Attack")]
-    public float slamRange = 1.8f;   // Area
+    [Header("Special: Area Slam")]
+    public float slamRange = 1.8f;
     public int slamDamage = 5;
     public float slamCooldown = 3f;
     [Range(0f, 1f)] public float slamChance = 0.45f;
 
-    [Header("Dash Attack")]
-    public float dashSpeed = 5f;
-    public float dashLength = 4f;
-    public int dashDamage = 6;
+    [Header("Special: Dash")]
+    public float dashSpeed = 7f;
+    public float dashLength = 5f;
+    public int dashDamage = 8;
     public float dashCooldown = 3.5f;
 
-    private float lastSlamTime = -99f;
-    private float lastDashTime = -99f;
+    private float lastSpecialTime = -99f;
 
-    // Only this method is different!
     protected override void TryAttack()
     {
-        // Slam
-        if (bossAttackType == BossAttackType.Slam)
+        // Area Slam
+        if (specialType == BossSpecialType.AreaAttack)
         {
-            if (Time.time - lastSlamTime >= slamCooldown && Random.value < slamChance)
+            if (Time.time - lastSpecialTime >= slamCooldown && Random.value < slamChance)
             {
                 StartCoroutine(SlamAttack());
-                lastSlamTime = Time.time;
+                lastSpecialTime = Time.time;
                 return;
             }
         }
         // Dash
-        else if (bossAttackType == BossAttackType.Dash)
+        else if (specialType == BossSpecialType.Dash)
         {
-            if (Time.time - lastDashTime >= dashCooldown)
+            if (Time.time - lastSpecialTime >= dashCooldown)
             {
                 StartCoroutine(DashAttack());
-                lastDashTime = Time.time;
+                lastSpecialTime = Time.time;
                 return;
             }
         }
 
-        // Fallback to regular attack
+        // Fallback to base attack
         base.TryAttack();
     }
 
-    IEnumerator SlamAttack()
+    private IEnumerator SlamAttack()
     {
-        Debug.Log("[Boss] SLAM!");
-        if (spriteRenderer) spriteRenderer.color = Color.red; // Visual feedback
-        yield return new WaitForSeconds(0.18f);
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.22f);
 
-        // Hit player if in slam range
+        // Damage player if within radius
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, slamRange);
         foreach (var hit in hits)
         {
             if (hit.CompareTag("Player"))
             {
-                PlayerHealth playerHealth = hit.GetComponent<PlayerHealth>();
-                if (playerHealth != null)
-                    playerHealth.TakeDamage(slamDamage);
+                PlayerHealth hp = hit.GetComponent<PlayerHealth>();
+                if (hp != null)
+                    hp.TakeDamage(slamDamage);
             }
         }
-        yield return new WaitForSeconds(0.12f);
-        if (spriteRenderer) spriteRenderer.color = Color.yellow; // Reset
+        yield return new WaitForSeconds(0.15f);
+        spriteRenderer.color = baseColor;
     }
 
-    IEnumerator DashAttack()
+    private IEnumerator DashAttack()
     {
-        Debug.Log("[Boss] DASH!");
-        if (spriteRenderer) spriteRenderer.color = Color.cyan;
+        spriteRenderer.color = Color.cyan;
+        yield return new WaitForSeconds(0.13f);
 
         Vector3 start = transform.position;
-        Vector3 dir = player ? (player.position - transform.position).normalized : Vector3.right;
-        dir.y = 0; // X axis only
-        float dashDuration = dashLength / dashSpeed;
+        Vector3 dashDir = (player ? (player.position - start) : Vector3.right).normalized;
+        dashDir.y = 0; // X axis only for sidescroller!
+        float dashTime = dashLength / dashSpeed;
         float t = 0f;
 
-        isLaunched = true; // Prevent moving/attacking during dash
+        isLaunched = true; // Prevents movement/attack during dash
 
-        while (t < dashDuration)
+        while (t < dashTime)
         {
-            transform.position += dir * dashSpeed * Time.deltaTime;
+            transform.position += dashDir * dashSpeed * Time.deltaTime;
             t += Time.deltaTime;
             yield return null;
         }
 
-        // Hit if player is close after dash
+        // Hit player if nearby at end of dash
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1.2f);
         foreach (var hit in hits)
         {
             if (hit.CompareTag("Player"))
             {
-                PlayerHealth playerHealth = hit.GetComponent<PlayerHealth>();
-                if (playerHealth != null)
-                    playerHealth.TakeDamage(dashDamage);
+                PlayerHealth hp = hit.GetComponent<PlayerHealth>();
+                if (hp != null)
+                    hp.TakeDamage(dashDamage);
             }
         }
 
         isLaunched = false;
-
-        if (spriteRenderer) spriteRenderer.color = Color.yellow;
+        spriteRenderer.color = baseColor;
     }
 }

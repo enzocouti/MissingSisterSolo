@@ -5,43 +5,45 @@ using System.Collections.Generic;
 public class EnemyCombatController : MonoBehaviour
 {
     [Header("AI & Combat")]
-    public float moveSpeed = 2.5f;
+    public float moveSpeed = 2.4f;
     public float detectionRange = 7f;
     public float attackRange = 1.2f;
     public float attackCooldown = 1.4f;
     public int touchDamage = 2;
+    [Range(1, 3)] public int maxAttackers = 1;
 
     [Header("Spacing")]
-    public float minSeparation = 0.7f;
-    public float verticalAlignThreshold = 0.32f;
-    public float verticalSeparation = 0.5f;
+    public float minSeparation = 0.8f;
+    public float verticalAlignThreshold = 0.34f;
+    public float verticalSeparation = 0.46f;
 
-    [Header("Behavior Tuning")]
-    public int maxAttackers = 1;
-    public float paceDistance = 0.7f;
-    public float paceSpeed = 1.1f;
+    [Header("Get Up")]
+    public float getUpDelay = 0.7f;
 
     protected Transform player;
+    protected SpriteRenderer spriteRenderer;
+    protected Rigidbody2D rb;
     protected static List<EnemyCombatController> attackers = new List<EnemyCombatController>();
 
     protected bool isAttacking = false;
-    protected bool isPacing = false;
-    private bool isDead = false;
-    private bool isHurt = false;
+    protected bool isDead = false;
     protected bool isLaunched = false;
-    protected float lastAttackTime = -99f;
+    protected bool isKnockedDown = false;
+    protected bool isGettingUp = false;
 
-    protected SpriteRenderer spriteRenderer;
-    private Color baseColor;
+    protected Color baseColor; // Changed from private to protected for boss
+    protected float lastAttackTime = -99f; //  ADDED
 
-    private Vector3 startPacePos;
-    private int paceDir = 1;
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
+        baseColor = spriteRenderer ? spriteRenderer.color : Color.white;
+    }
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        baseColor = spriteRenderer ? spriteRenderer.color : Color.white;
 
         Collider2D myCol = GetComponent<Collider2D>();
         foreach (var enemy in FindObjectsByType<EnemyCombatController>(FindObjectsSortMode.None))
@@ -57,34 +59,28 @@ public class EnemyCombatController : MonoBehaviour
 
     void Update()
     {
-        if (isDead || isHurt || isLaunched) return;
+        if (isDead || isLaunched || isKnockedDown || isGettingUp || isAttacking) return;
         if (player == null) return;
 
         Vector2 toPlayer = player.position - transform.position;
+        float dist = toPlayer.magnitude;
         float xDist = Mathf.Abs(toPlayer.x);
         float yDist = Mathf.Abs(toPlayer.y);
-        float attackDist = toPlayer.magnitude;
 
-        if (attackDist <= attackRange)
+        if (dist <= attackRange)
         {
             if (!isAttacking && CanAttack())
             {
-                TryAttack(); // <-- Use this for extensibility!
+                TryAttack();
             }
             else if (!isAttacking)
             {
-                if (!isPacing)
-                    StartCoroutine(PaceCoroutine());
+                StartCoroutine(PaceCoroutine());
             }
         }
-        else if (attackDist <= detectionRange)
+        else if (dist <= detectionRange)
         {
-            if (yDist > verticalAlignThreshold)
-            {
-                float yDir = Mathf.Sign(toPlayer.y);
-                transform.position += new Vector3(0, yDir * moveSpeed * Time.deltaTime, 0);
-            }
-            else
+            if (yDist < verticalAlignThreshold)
             {
                 bool blocked = false;
                 Collider2D[] nearby = Physics2D.OverlapCircleAll(transform.position, minSeparation);
@@ -92,14 +88,9 @@ public class EnemyCombatController : MonoBehaviour
                 {
                     if (col != null && col != GetComponent<Collider2D>() && col.CompareTag("Enemy"))
                     {
-                        Vector2 otherPos = col.transform.position;
-                        float horizontalDiff = otherPos.x - transform.position.x;
-                        float verticalDiff = Mathf.Abs(otherPos.y - transform.position.y);
-
-                        bool sameDirection = Mathf.Sign(horizontalDiff) == Mathf.Sign(toPlayer.x);
-                        bool closeVertically = verticalDiff < verticalSeparation;
-
-                        if (Mathf.Abs(horizontalDiff) < minSeparation && sameDirection && closeVertically)
+                        float horizontalDiff = col.transform.position.x - transform.position.x;
+                        float verticalDiff = Mathf.Abs(col.transform.position.y - transform.position.y);
+                        if (Mathf.Abs(horizontalDiff) < minSeparation && verticalDiff < verticalSeparation)
                         {
                             blocked = true;
                             break;
@@ -114,17 +105,25 @@ public class EnemyCombatController : MonoBehaviour
                         spriteRenderer.flipX = (xDir < 0);
                 }
             }
+            else
+            {
+                float yDir = Mathf.Sign(toPlayer.y);
+                transform.position += new Vector3(0, yDir * moveSpeed * 0.72f * Time.deltaTime, 0);
+            }
         }
     }
 
-    // This is what bosses will override!
+    //  This needs to be here so boss can override and base can use it
     protected virtual void TryAttack()
     {
+        attackers.RemoveAll(a => a == null);
+        if (attackers.Count >= maxAttackers && !attackers.Contains(this)) return;
         attackers.Add(this);
         StartCoroutine(AttackCoroutine());
     }
 
-    private bool CanAttack()
+    //  Added CanAttack as a protected function
+    protected bool CanAttack()
     {
         attackers.RemoveAll(a => a == null);
         return attackers.Count < maxAttackers || attackers.Contains(this);
@@ -133,60 +132,55 @@ public class EnemyCombatController : MonoBehaviour
     private IEnumerator AttackCoroutine()
     {
         isAttacking = true;
-        float windup = 0.18f;
-        float hitPause = 0.09f;
-        if (spriteRenderer) spriteRenderer.color = Color.yellow;
-        yield return new WaitForSeconds(windup);
+        spriteRenderer.color = Color.yellow;
+        yield return new WaitForSeconds(0.16f);
 
-        if (spriteRenderer) spriteRenderer.color = Color.red;
+        spriteRenderer.color = Color.red;
         if (player != null)
         {
-            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
-                playerHealth.TakeDamage(touchDamage);
+            PlayerHealth hp = player.GetComponent<PlayerHealth>();
+            if (hp != null)
+                hp.TakeDamage(touchDamage);
         }
-        yield return new WaitForSeconds(hitPause);
+        yield return new WaitForSeconds(0.11f);
 
-        if (spriteRenderer) spriteRenderer.color = baseColor;
+        spriteRenderer.color = baseColor;
         lastAttackTime = Time.time;
-        yield return new WaitForSeconds(attackCooldown - windup - hitPause);
-
+        yield return new WaitForSeconds(attackCooldown);
         isAttacking = false;
         attackers.Remove(this);
     }
 
     private IEnumerator PaceCoroutine()
     {
-        isPacing = true;
-        startPacePos = transform.position;
-        float paceTime = Random.Range(0.3f, 0.75f);
-        paceDir = Random.value < 0.5f ? -1 : 1;
-
+        float paceTime = Random.Range(0.32f, 0.8f);
         float timer = 0;
-        while (timer < paceTime && !isAttacking)
+        int dir = Random.value < 0.5f ? -1 : 1;
+        Vector3 start = transform.position;
+        while (timer < paceTime && !isAttacking && !isDead)
         {
-            float move = paceDir * paceSpeed * Time.deltaTime;
-            transform.position = startPacePos + new Vector3(move * Mathf.Sin(timer * 2f), 0, 0);
+            float offset = dir * 0.32f * Mathf.Sin(timer * 4f);
+            transform.position = new Vector3(start.x + offset, start.y, start.z);
             timer += Time.deltaTime;
             yield return null;
         }
-        isPacing = false;
     }
 
-    public void OnHurt(PlayerAttackData attackData, bool playerIsFacingRight)
+    public void OnHurt(PlayerAttackData data, bool playerIsFacingRight)
     {
-        if (isDead) return;
-        if (attackData.isLauncher)
+        if (isDead || isKnockedDown || isLaunched || isGettingUp) return;
+
+        if (data.isSlam)
         {
-            StartCoroutine(LaunchCoroutine(attackData, playerIsFacingRight));
+            StartCoroutine(SlamCoroutine());
         }
-        else if (attackData.isHeavy)
+        else if (data.isLauncher || data.isHeavy)
         {
-            StartCoroutine(KnockbackCoroutine(attackData, playerIsFacingRight));
+            StartCoroutine(LaunchArcCoroutine(data, playerIsFacingRight));
         }
         else
         {
-            StartCoroutine(HurtFeedback());
+            StartCoroutine(HurtFlash());
         }
     }
 
@@ -194,107 +188,66 @@ public class EnemyCombatController : MonoBehaviour
     {
         isDead = true;
         StopAllCoroutines();
-        if (spriteRenderer)
-            spriteRenderer.color = Color.gray;
+        spriteRenderer.color = Color.gray;
         attackers.Remove(this);
     }
 
-    IEnumerator HurtFeedback()
+    private IEnumerator HurtFlash()
     {
-        isHurt = true;
-        if (spriteRenderer)
-            spriteRenderer.color = Color.red;
-
-        float freeze = 0.07f;
-        float t = 0;
-        while (t < freeze)
-        {
-            t += Time.unscaledDeltaTime;
-            yield return null;
-        }
-
-        Vector3 originalPos = transform.position;
-        float shakeAmt = 0.07f;
-        for (int i = 0; i < 3; i++)
-        {
-            transform.position = originalPos + (Vector3)Random.insideUnitCircle * shakeAmt;
-            yield return new WaitForSeconds(0.03f);
-        }
-        transform.position = originalPos;
-
-        if (spriteRenderer)
-            spriteRenderer.color = baseColor;
-
-        isHurt = false;
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.08f);
+        spriteRenderer.color = baseColor;
     }
 
-    IEnumerator KnockbackCoroutine(PlayerAttackData attackData, bool playerIsFacingRight)
+    private IEnumerator LaunchArcCoroutine(PlayerAttackData data, bool playerIsFacingRight)
     {
         isLaunched = true;
-        float duration = 0.35f;
-        float height = 1f;
-        float distance = attackData.knockbackForce;
+        float duration = data.launchDuration;
+        float height = data.launchHeight;
         Vector3 start = transform.position;
-        float direction = playerIsFacingRight ? 1f : -1f;
-        Vector3 target = start + new Vector3(direction * distance, 0, 0);
+        float dir = playerIsFacingRight ? 1f : -1f;
+        Vector3 end = start + new Vector3(dir * 2.2f, 0f, 0f);
 
-        float timer = 0f;
-        while (timer < duration)
+        float t = 0f;
+        while (t < duration)
         {
-            float progress = timer / duration;
+            float progress = t / duration;
             float yOffset = Mathf.Sin(progress * Mathf.PI) * height;
-            Vector3 horizontal = Vector3.Lerp(start, target, progress);
+            Vector3 horizontal = Vector3.Lerp(start, end, progress);
             transform.position = new Vector3(horizontal.x, start.y + yOffset, start.z);
-
-            timer += Time.deltaTime;
+            t += Time.deltaTime;
             yield return null;
         }
-        transform.position = new Vector3(target.x, start.y, start.z);
+        transform.position = new Vector3(end.x, start.y, start.z);
 
         isLaunched = false;
+        isKnockedDown = true;
+        spriteRenderer.color = Color.magenta;
+        yield return new WaitForSeconds(getUpDelay);
+        spriteRenderer.color = baseColor;
+        isKnockedDown = false;
+        isGettingUp = false;
     }
 
-    IEnumerator LaunchCoroutine(PlayerAttackData attackData, bool playerIsFacingRight)
+    private IEnumerator SlamCoroutine()
     {
+        isKnockedDown = true;
         isLaunched = true;
-        float duration = attackData.launchDuration;
-        float height = attackData.launchHeight;
         Vector3 start = transform.position;
-
-        float timer = 0f;
-        while (timer < duration)
+        Vector3 end = new Vector3(start.x, 0f, start.z);
+        float fallTime = 0.27f;
+        float t = 0f;
+        while (t < fallTime)
         {
-            float progress = timer / duration;
-            float yOffset = Mathf.Sin(progress * Mathf.PI) * height;
-            transform.position = new Vector3(start.x, start.y + yOffset, start.z);
-
-            timer += Time.deltaTime;
+            transform.position = Vector3.Lerp(start, end, t / fallTime);
+            t += Time.deltaTime;
             yield return null;
         }
-        transform.position = new Vector3(start.x, start.y + height, start.z);
-
-        float hang = attackData.launchHangTime;
-        float hangTimer = 0f;
-        while (hangTimer < hang)
-        {
-            hangTimer += Time.deltaTime;
-            yield return null;
-        }
-
-        float fallTime = duration * 0.8f;
-        Vector3 peak = transform.position;
-        float fallTimer = 0f;
-        while (fallTimer < fallTime)
-        {
-            float progress = fallTimer / fallTime;
-            float yOffset = Mathf.Lerp(height, 0, progress);
-            transform.position = new Vector3(start.x, start.y + yOffset, start.z);
-
-            fallTimer += Time.deltaTime;
-            yield return null;
-        }
-        transform.position = start;
-
+        transform.position = end;
+        yield return new WaitForSeconds(getUpDelay);
+        spriteRenderer.color = baseColor;
+        isKnockedDown = false;
         isLaunched = false;
+        isGettingUp = false;
     }
 }
