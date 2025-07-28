@@ -226,9 +226,7 @@ MonoBehaviour:
   attackRange: 1.2
   attackCooldown: 1
   touchDamage: 20
-  minSeparation: 10
-  verticalAlignThreshold: 0.32
-  verticalSeparation: 5
-  maxAttackers: 1
-  paceDistance: 0.7
-  paceSpeed: 1.1
+  attackAngle: 60
+  bufferZone: 3
+  waitPaceDistance: 4
+  waitPaceSpeed: 0.2

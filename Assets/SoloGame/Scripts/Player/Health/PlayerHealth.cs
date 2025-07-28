@@ -50,7 +50,10 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        if (isInvincible || isKnockedDown || isDead) return;
+        // Make player invincible to all damage if dashing (from PlayerCombat)
+        var combat = GetComponent<PlayerCombat>();
+        if (isInvincible || isKnockedDown || isDead || (combat != null && combat.isDashInvincible))
+            return;
 
         float now = Time.time;
         if (now - lastHitTime < knockdownComboWindow)
@@ -78,6 +81,7 @@ public class PlayerHealth : MonoBehaviour
             consecutiveHits = 0;
         }
     }
+
 
     void UpdateUI()
     {

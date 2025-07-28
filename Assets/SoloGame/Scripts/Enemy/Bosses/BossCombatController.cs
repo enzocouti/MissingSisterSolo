@@ -53,7 +53,7 @@ public class BossCombatController : EnemyCombatController
     IEnumerator SlamAttack()
     {
         Debug.Log("[Boss] SLAM!");
-        if (spriteRenderer) spriteRenderer.color = Color.red; // Visual feedback
+        if (spriteRenderer) spriteRenderer.color = Color.yellow; // Yellow for attack windup
         yield return new WaitForSeconds(0.18f);
 
         // Hit player if in slam range
@@ -68,13 +68,14 @@ public class BossCombatController : EnemyCombatController
             }
         }
         yield return new WaitForSeconds(0.12f);
-        if (spriteRenderer) spriteRenderer.color = Color.yellow; // Reset
+
+        if (spriteRenderer) spriteRenderer.color = baseColor; // Restore color after attack
     }
 
     IEnumerator DashAttack()
     {
         Debug.Log("[Boss] DASH!");
-        if (spriteRenderer) spriteRenderer.color = Color.cyan;
+        if (spriteRenderer) spriteRenderer.color = Color.yellow; // Yellow for dash windup
 
         Vector3 start = transform.position;
         Vector3 dir = player ? (player.position - transform.position).normalized : Vector3.right;
@@ -105,6 +106,6 @@ public class BossCombatController : EnemyCombatController
 
         isLaunched = false;
 
-        if (spriteRenderer) spriteRenderer.color = Color.yellow;
+        if (spriteRenderer) spriteRenderer.color = baseColor;
     }
 }

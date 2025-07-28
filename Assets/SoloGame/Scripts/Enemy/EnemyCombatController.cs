@@ -11,134 +11,150 @@ public class EnemyCombatController : MonoBehaviour
     public float attackCooldown = 1.4f;
     public int touchDamage = 2;
 
-    [Header("Spacing")]
-    public float minSeparation = 0.7f;
-    public float verticalAlignThreshold = 0.32f;
-    public float verticalSeparation = 0.5f;
+    [Header("Attack Logic")]
+    [Range(0, 180)] public float attackAngle = 60f; // degrees cone in front
+    public float bufferZone = 2.3f;  // Increased buffer spacing!
+    public float waitPaceDistance = 0.8f; // Wider pacing!
+    public float waitPaceSpeed = 1.1f;
 
-    [Header("Behavior Tuning")]
-    public int maxAttackers = 1;
-    public float paceDistance = 0.7f;
-    public float paceSpeed = 1.1f;
+    public static List<EnemyCombatController> allEnemies = new List<EnemyCombatController>();
 
     protected Transform player;
-    protected static List<EnemyCombatController> attackers = new List<EnemyCombatController>();
-
     protected bool isAttacking = false;
-    protected bool isPacing = false;
     private bool isDead = false;
     private bool isHurt = false;
     protected bool isLaunched = false;
-    protected float lastAttackTime = -99f;
 
     protected SpriteRenderer spriteRenderer;
-    private Color baseColor;
+    protected Color baseColor;
 
-    private Vector3 startPacePos;
-    private int paceDir = 1;
+    private float waitPaceTimer = 0f;
+    private int waitPaceDir = 1;
+
+    private void OnEnable() { allEnemies.Add(this); }
+    private void OnDisable() { allEnemies.Remove(this); }
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         spriteRenderer = GetComponent<SpriteRenderer>();
         baseColor = spriteRenderer ? spriteRenderer.color : Color.white;
-
-        Collider2D myCol = GetComponent<Collider2D>();
-        foreach (var enemy in FindObjectsByType<EnemyCombatController>(FindObjectsSortMode.None))
-        {
-            if (enemy != this)
-            {
-                Collider2D otherCol = enemy.GetComponent<Collider2D>();
-                if (myCol && otherCol)
-                    Physics2D.IgnoreCollision(myCol, otherCol, true);
-            }
-        }
     }
 
     void Update()
     {
         if (isDead || isHurt || isLaunched) return;
-        if (player == null) return;
+        if (player == null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player")?.transform;
+            if (player == null) return;
+        }
 
         Vector2 toPlayer = player.position - transform.position;
-        float xDist = Mathf.Abs(toPlayer.x);
-        float yDist = Mathf.Abs(toPlayer.y);
-        float attackDist = toPlayer.magnitude;
+        float distance = toPlayer.magnitude;
 
-        if (attackDist <= attackRange)
+        // Always face the player
+        if (toPlayer.x > 0.01f) spriteRenderer.flipX = false;
+        else if (toPlayer.x < -0.01f) spriteRenderer.flipX = true;
+
+        // Only the closest enemy can attack
+        EnemyCombatController closest = FindClosestEnemyToPlayer();
+
+        if (this == closest)
         {
-            if (!isAttacking && CanAttack())
+            // Within attack range and in front? Attack!
+            if (distance <= attackRange && PlayerIsInFront(toPlayer))
             {
-                TryAttack(); // <-- Use this for extensibility!
-            }
-            else if (!isAttacking)
-            {
-                if (!isPacing)
-                    StartCoroutine(PaceCoroutine());
-            }
-        }
-        else if (attackDist <= detectionRange)
-        {
-            if (yDist > verticalAlignThreshold)
-            {
-                float yDir = Mathf.Sign(toPlayer.y);
-                transform.position += new Vector3(0, yDir * moveSpeed * Time.deltaTime, 0);
+                if (!isAttacking)
+                    TryAttack();
             }
             else
             {
-                bool blocked = false;
-                Collider2D[] nearby = Physics2D.OverlapCircleAll(transform.position, minSeparation);
-                foreach (var col in nearby)
-                {
-                    if (col != null && col != GetComponent<Collider2D>() && col.CompareTag("Enemy"))
-                    {
-                        Vector2 otherPos = col.transform.position;
-                        float horizontalDiff = otherPos.x - transform.position.x;
-                        float verticalDiff = Mathf.Abs(otherPos.y - transform.position.y);
+                // Move toward player if not in attack range yet
+                MoveTowards(player.position, moveSpeed);
+            }
+        }
+        else
+        {
+            // Maintain a buffer zone around the player and "pace" left/right
+            float desiredDist = attackRange + bufferZone;
+            float actualDist = toPlayer.magnitude;
 
-                        bool sameDirection = Mathf.Sign(horizontalDiff) == Mathf.Sign(toPlayer.x);
-                        bool closeVertically = verticalDiff < verticalSeparation;
-
-                        if (Mathf.Abs(horizontalDiff) < minSeparation && sameDirection && closeVertically)
-                        {
-                            blocked = true;
-                            break;
-                        }
-                    }
-                }
-                if (!blocked)
+            if (actualDist > desiredDist + 0.1f)
+            {
+                MoveTowards(player.position, moveSpeed);
+                waitPaceTimer = 0f;
+            }
+            else if (actualDist < desiredDist - 0.1f)
+            {
+                Vector3 fromPlayer = (transform.position - player.position).normalized;
+                MoveTowards(transform.position + fromPlayer, moveSpeed * 0.7f);
+                waitPaceTimer = 0f;
+            }
+            else
+            {
+                // Pace left/right on the buffer ring (circle around player)
+                waitPaceTimer += Time.deltaTime * waitPaceSpeed * waitPaceDir;
+                if (Mathf.Abs(waitPaceTimer) > waitPaceDistance)
                 {
-                    float xDir = Mathf.Sign(toPlayer.x);
-                    transform.position += new Vector3(xDir * moveSpeed * Time.deltaTime, 0, 0);
-                    if (spriteRenderer)
-                        spriteRenderer.flipX = (xDir < 0);
+                    waitPaceDir *= -1;
                 }
+
+                // Calculate a perpendicular vector to the player for pacing
+                Vector3 bufferPos = player.position + (transform.position - player.position).normalized * desiredDist;
+                Vector3 perp = Vector3.Cross(Vector3.forward, (bufferPos - player.position).normalized);
+                Vector3 pacePos = bufferPos + perp * waitPaceTimer;
+
+                MoveTowards(pacePos, moveSpeed * 0.65f);
             }
         }
     }
 
-    // This is what bosses will override!
-    protected virtual void TryAttack()
+    void MoveTowards(Vector3 target, float speed)
     {
-        attackers.Add(this);
-        StartCoroutine(AttackCoroutine());
+        Vector3 dir = (target - transform.position).normalized;
+        transform.position += dir * speed * Time.deltaTime;
     }
 
-    private bool CanAttack()
+    bool PlayerIsInFront(Vector2 toPlayer)
     {
-        attackers.RemoveAll(a => a == null);
-        return attackers.Count < maxAttackers || attackers.Contains(this);
+        Vector2 facing = spriteRenderer.flipX ? Vector2.left : Vector2.right;
+        float angle = Vector2.Angle(facing, toPlayer);
+        return angle < attackAngle * 0.5f;
+    }
+
+    public static EnemyCombatController FindClosestEnemyToPlayer()
+    {
+        Transform player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        if (!player) return null;
+        EnemyCombatController closest = null;
+        float minDist = float.MaxValue;
+        foreach (var enemy in allEnemies)
+        {
+            if (enemy == null || enemy.isDead) continue;
+            float dist = (enemy.transform.position - player.position).sqrMagnitude;
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closest = enemy;
+            }
+        }
+        return closest;
+    }
+
+    protected virtual void TryAttack()
+    {
+        isAttacking = true;
+        StartCoroutine(AttackCoroutine());
     }
 
     private IEnumerator AttackCoroutine()
     {
-        isAttacking = true;
         float windup = 0.18f;
         float hitPause = 0.09f;
         if (spriteRenderer) spriteRenderer.color = Color.yellow;
         yield return new WaitForSeconds(windup);
 
-        if (spriteRenderer) spriteRenderer.color = Color.red;
         if (player != null)
         {
             PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
@@ -148,29 +164,9 @@ public class EnemyCombatController : MonoBehaviour
         yield return new WaitForSeconds(hitPause);
 
         if (spriteRenderer) spriteRenderer.color = baseColor;
-        lastAttackTime = Time.time;
         yield return new WaitForSeconds(attackCooldown - windup - hitPause);
 
         isAttacking = false;
-        attackers.Remove(this);
-    }
-
-    private IEnumerator PaceCoroutine()
-    {
-        isPacing = true;
-        startPacePos = transform.position;
-        float paceTime = Random.Range(0.3f, 0.75f);
-        paceDir = Random.value < 0.5f ? -1 : 1;
-
-        float timer = 0;
-        while (timer < paceTime && !isAttacking)
-        {
-            float move = paceDir * paceSpeed * Time.deltaTime;
-            transform.position = startPacePos + new Vector3(move * Mathf.Sin(timer * 2f), 0, 0);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        isPacing = false;
     }
 
     public void OnHurt(PlayerAttackData attackData, bool playerIsFacingRight)
@@ -196,14 +192,12 @@ public class EnemyCombatController : MonoBehaviour
         StopAllCoroutines();
         if (spriteRenderer)
             spriteRenderer.color = Color.gray;
-        attackers.Remove(this);
     }
 
     IEnumerator HurtFeedback()
     {
         isHurt = true;
-        if (spriteRenderer)
-            spriteRenderer.color = Color.red;
+        if (spriteRenderer) spriteRenderer.color = Color.red;
 
         float freeze = 0.07f;
         float t = 0;

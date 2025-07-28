@@ -6,7 +6,6 @@ using System.Collections.Generic;
 [RequireComponent(typeof(PlayerStateMachine))]
 public class PlayerCombat : MonoBehaviour
 {
-    
     public Rigidbody2D rb;
     public SpriteRenderer spriteRenderer;
     public Transform hitboxOrigin;
@@ -14,24 +13,21 @@ public class PlayerCombat : MonoBehaviour
     public PlayerCombatInput input;
     public PlayerStateMachine stateMachine;
 
-    
     public PlayerAttackData[] comboSequence;
     public PlayerAttackData launcherAttack;
     public PlayerAttackData airLightAttack;
     public PlayerAttackData airHeavyAttack;
 
-    
     public float jumpHeight = 2f;
     public float jumpDuration = 0.5f;
     public bool isJumping { get; private set; }
     public bool IsGrounded { get; private set; } = true;
 
-    
     public bool isFacingRight = true;
     public float dashSpeed = 12f;
     public bool isAttacking = false;
 
-    //dash
+    // Dash fields
     public float dashDistance = 3f;
     public float dashDuration = 0.2f;
     public string dashIgnoreTag = "Enemy";
@@ -40,6 +36,9 @@ public class PlayerCombat : MonoBehaviour
     private int currentComboIndex = 0;
     private float comboTimer = 0f;
     public float comboResetTime = 0.5f;
+
+    // Dash invincibility flag
+    public bool isDashInvincible = false;
 
     private void Awake()
     {
@@ -212,17 +211,18 @@ public class PlayerCombat : MonoBehaviour
     private IEnumerator DashCoroutine()
     {
         isDashing = true;
+        isDashInvincible = true;
 
-        Collider2D[] allCols = GetComponents<Collider2D>();
+        // Only ignore colliders with tag "Enemy"
+        Collider2D[] myCols = GetComponents<Collider2D>();
         List<Collider2D> ignored = new List<Collider2D>();
+        Collider2D[] allCols = GameObject.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
 
-        Collider2D[] enemyColliders = GameObject.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
-
-        foreach (var col in enemyColliders)
+        foreach (var col in allCols)
         {
             if (col.CompareTag(dashIgnoreTag))
             {
-                foreach (var myCol in allCols)
+                foreach (var myCol in myCols)
                     Physics2D.IgnoreCollision(myCol, col, true);
                 ignored.Add(col);
             }
@@ -243,12 +243,14 @@ public class PlayerCombat : MonoBehaviour
 
         transform.position = target;
 
+        // Restore collisions with enemies
         foreach (var col in ignored)
         {
-            foreach (var myCol in allCols)
+            foreach (var myCol in myCols)
                 Physics2D.IgnoreCollision(myCol, col, false);
         }
 
         isDashing = false;
+        isDashInvincible = false;
     }
 }
