@@ -14,14 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: KickPunch
   damage: 2
-  attackDuration: 0.25
+  attackDuration: 0.5
   hitboxSize: {x: 1, y: 1}
   hitboxOffset: {x: 1, y: 0}
-  isHeavy: 0
   isLauncher: 0
+  isHeavy: 0
+  knockbackForce: 2.5
   launchHeight: 2.5
   launchDuration: 0.4
   launchHangTime: 0.15
-  animationTriggerName: KickPunch
-  knockbackForce: 2.5
-  isSlam: 0

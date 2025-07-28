@@ -14,14 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Finisher2
   damage: 4
-  attackDuration: 0.25
+  attackDuration: 0.7
   hitboxSize: {x: 1, y: 1}
   hitboxOffset: {x: 1, y: 0}
-  isHeavy: 1
   isLauncher: 0
+  isHeavy: 1
+  knockbackForce: 2.5
   launchHeight: 2.5
   launchDuration: 0.4
   launchHangTime: 0.15
-  animationTriggerName: Finisher2
-  knockbackForce: 2.5
-  isSlam: 0

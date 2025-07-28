@@ -14,9 +14,9 @@ public class AttackState : IPlayerState
 
     public void Enter()
     {
-        timer = attackData.attackDuration;
+        timer = attackData.attackDuration; // attackDuration set per SO!
         SpawnHitbox();
-        Debug.Log($"[AttackState] Attack: {attackData.attackName}");
+        // Play animation here in future using attackData.animationName etc.
     }
 
     public void Update()
@@ -25,7 +25,7 @@ public class AttackState : IPlayerState
         if (timer <= 0)
         {
             player.stateMachine.ChangeState(new IdleState(player));
-            player.OnAttackEnd();
+            player.OnAttackEnd(); // Key for buffering!
         }
     }
 

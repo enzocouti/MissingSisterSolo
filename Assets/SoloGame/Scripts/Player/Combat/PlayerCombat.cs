@@ -4,11 +4,10 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
     [Header("Combo System")]
-    [SerializeField] private List<ComboEntry> groundCombos;
-
+    [SerializeField] private List<ComboEntry> groundCombos; // Set up in inspector (pattern: attackData)
     [Header("Settings")]
     public Transform hitboxOrigin;
-    public float comboInputWindow = 0.4f; // Time allowed to continue the combo
+    public float comboInputWindow = 0.5f;
 
     [Header("References")]
     public Rigidbody2D rb;
@@ -20,15 +19,15 @@ public class PlayerCombat : MonoBehaviour
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isDashInvincible = false;
 
-    private string currentComboPattern = ""; // E.g. "J", "JJ", "JK", etc.
-    private float comboTimer = 0f;
-    private bool isComboActive = false; // Are we in a combo chain?
+    private string currentCombo = "";        // e.g., "J", "JJ", etc.
+    private Queue<string> bufferedInputs = new Queue<string>();
+    private float bufferTimer = 0f;
+    private bool waitingForInput = false;
 
     [Header("Dash Settings")]
     public float dashDistance = 3f;
     public float dashDuration = 0.2f;
     public float dashInvincibleTime = 0.18f;
-
     private bool isDashing = false;
 
     private void Awake()
@@ -41,15 +40,15 @@ public class PlayerCombat : MonoBehaviour
 
     private void OnEnable()
     {
-        input.OnLightAttack += OnJPressed;
-        input.OnHeavyAttack += OnKPressed;
+        input.OnLightAttack += () => HandleInput("J");
+        input.OnHeavyAttack += () => HandleInput("K");
         input.OnDash += HandleDash;
     }
 
     private void OnDisable()
     {
-        input.OnLightAttack -= OnJPressed;
-        input.OnHeavyAttack -= OnKPressed;
+        input.OnLightAttack -= () => HandleInput("J");
+        input.OnHeavyAttack -= () => HandleInput("K");
         input.OnDash -= HandleDash;
     }
 
@@ -57,14 +56,16 @@ public class PlayerCombat : MonoBehaviour
     {
         UpdateFacingDirection();
 
-        // If combo is active, countdown window
-        if (isComboActive && !isAttacking)
+        // Handle buffer window timeout
+        if (waitingForInput)
         {
-            comboTimer -= Time.deltaTime;
-            if (comboTimer <= 0f)
+            bufferTimer -= Time.deltaTime;
+            if (bufferTimer <= 0f)
             {
-                Debug.Log("[Combo] Combo timer expired, resetting.");
-                ResetCombo();
+                waitingForInput = false;
+                bufferedInputs.Clear();
+                currentCombo = "";
+                Debug.Log("[ComboBuffer] Combo window ended. Reset combo.");
             }
         }
     }
@@ -75,93 +76,78 @@ public class PlayerCombat : MonoBehaviour
         if (input.moveInput.x > 0.1f) FaceRight();
         else if (input.moveInput.x < -0.1f) FaceLeft();
     }
-
     private void FaceRight()
     {
         isFacingRight = true;
         spriteRenderer.flipX = false;
     }
-
     private void FaceLeft()
     {
         isFacingRight = false;
         spriteRenderer.flipX = true;
     }
 
-    // === INPUT HANDLING ===
-
-    private void OnJPressed()
+    private void HandleInput(string key)
     {
-        HandleComboInput("J");
-    }
-
-    private void OnKPressed()
-    {
-        HandleComboInput("K");
-    }
-
-    private void HandleComboInput(string inputKey)
-    {
-        // Ignore if attacking (let attack finish)
-        if (isAttacking) return;
-
-        // If we're not in a combo, start one
-        if (!isComboActive)
+        // If idle, start new combo
+        if (!isAttacking)
         {
-            currentComboPattern = inputKey;
-            isComboActive = true;
+            currentCombo = key;
+            StartComboAttack(currentCombo);
         }
+        // If attacking, queue up next combo input
         else
         {
-            // Continue chain (append input)
-            currentComboPattern += inputKey;
+            bufferedInputs.Enqueue(key);
+            bufferTimer = comboInputWindow;
+            waitingForInput = true;
+            Debug.Log($"[ComboBuffer] Buffered: {string.Join("", bufferedInputs)} after {currentCombo}");
         }
+    }
 
-        Debug.Log($"[ComboBuffer] Buffer now: {currentComboPattern}");
-
-        var entry = groundCombos.Find(c => c.comboPattern == currentComboPattern);
-        if (entry != null)
+    private void StartComboAttack(string pattern)
+    {
+        var entry = groundCombos.Find(c => c.comboPattern == pattern);
+        if (entry != null && entry.attackData != null)
         {
-            // Reset/combo timer for next input
-            comboTimer = comboInputWindow;
             isAttacking = true;
             stateMachine.ChangeState(new AttackState(this, entry.attackData));
-            Debug.Log($"[ComboBuffer] Matched: {currentComboPattern} -> {entry.attackData.attackName}");
+            Debug.Log($"[ComboBuffer] Started attack: {entry.comboPattern} ({entry.attackData.attackName})");
         }
         else
         {
-            Debug.Log($"[ComboBuffer] Pattern {currentComboPattern} not found, resetting.");
-            ResetCombo();
+            Debug.Log($"[ComboBuffer] No combo found for {pattern}, resetting.");
+            isAttacking = false;
+            currentCombo = "";
+            bufferedInputs.Clear();
         }
     }
 
-    // Called by AttackState when attack ends
+    // Called by AttackState when an attack finishes
     public void OnAttackEnd()
     {
         isAttacking = false;
-        if (isComboActive)
+        // If input(s) buffered, advance the combo
+        if (bufferedInputs.Count > 0)
         {
-            // After attack, give window for next input. If timer expires, combo resets in Update().
-            comboTimer = comboInputWindow;
+            currentCombo += bufferedInputs.Dequeue();
+            Debug.Log($"[ComboBuffer] Advancing to: {currentCombo}");
+            StartComboAttack(currentCombo);
+        }
+        else
+        {
+            // No input buffered, start window to accept next input for a follow-up
+            waitingForInput = true;
+            bufferTimer = comboInputWindow;
+            // If window expires, combo will be reset in Update
         }
     }
-
-    private void ResetCombo()
-    {
-        isComboActive = false;
-        currentComboPattern = "";
-        comboTimer = 0f;
-        isAttacking = false;
-    }
-
-    // === DASH ===
 
     private void HandleDash()
     {
         if (isAttacking || isDashing) return;
         StartCoroutine(DashRoutine());
     }
-
     private System.Collections.IEnumerator DashRoutine()
     {
         isDashing = true;

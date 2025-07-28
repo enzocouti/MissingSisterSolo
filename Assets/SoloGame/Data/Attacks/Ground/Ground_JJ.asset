@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Punch2
   damage: 5
-  attackDuration: 0.3
+  attackDuration: 0.5
   hitboxSize: {x: 1, y: 1}
   hitboxOffset: {x: 1, y: 0}
   isLauncher: 0

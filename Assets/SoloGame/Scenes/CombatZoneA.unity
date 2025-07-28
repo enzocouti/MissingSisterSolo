@@ -6516,7 +6516,7 @@ PrefabInstance:
       objectReference: {fileID: 5625569136032294536}
     - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: comboInputWindow
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: groundLayer.m_Bits
@@ -6524,7 +6524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: groundCombos.Array.size
-      value: 6
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: comboSequence.Array.size
@@ -6567,6 +6567,38 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 1017627581f2c434d8b182ca046e88d7, type: 2}
     - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[6].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: a010476f856d9734db127ae7aec571c8, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[7].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: 4252c25b1fb431344b95ac581b6c9ff4, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[8].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: 15a0f8a1813cfea46869f4563386a819, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[9].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: e186e5597888c0e44a16fa23b0f27869, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[10].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: dd304600528874841a05c41d9ac80417, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[11].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: fd45738a7ec33cf41a9eb77b5f394dce, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[12].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: 938e7c97be81b314d9b5f7e9825cbada, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[13].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: c22fd3bd8130adb47b7a6d9552a4865c, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: groundCombos.Array.data[0].comboPattern
       value: J
       objectReference: {fileID: 0}
@@ -6589,6 +6621,38 @@ PrefabInstance:
     - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: groundCombos.Array.data[5].comboPattern
       value: KKK
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[6].comboPattern
+      value: JK
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[7].comboPattern
+      value: JKK
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[8].comboPattern
+      value: JKJ
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[9].comboPattern
+      value: KJJ
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[10].comboPattern
+      value: KJ
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[11].comboPattern
+      value: KJK
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[12].comboPattern
+      value: JJK
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[13].comboPattern
+      value: KKJ
       objectReference: {fileID: 0}
     - target: {fileID: 3001479114626292222, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: m_LocalScale.y
