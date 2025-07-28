@@ -16,7 +16,7 @@ public class AttackState : IPlayerState
     {
         timer = attackData.attackDuration;
         SpawnHitbox();
-        Debug.Log("Entered Attack: " + attackData.attackName);
+        Debug.Log($"[AttackState] Attack: {attackData.attackName}");
     }
 
     public void Update()
@@ -29,10 +29,7 @@ public class AttackState : IPlayerState
         }
     }
 
-    public void Exit()
-    {
-        Debug.Log("Exited Attack: " + attackData.attackName);
-    }
+    public void Exit() { }
 
     private void SpawnHitbox()
     {

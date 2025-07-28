@@ -213,12 +213,10 @@ MonoBehaviour:
   attackRange: 1.2
   attackCooldown: 1.4
   touchDamage: 2
-  minSeparation: 0.7
-  verticalAlignThreshold: 0.32
-  verticalSeparation: 0.5
-  maxAttackers: 1
-  paceDistance: 0.7
-  paceSpeed: 1.1
+  attackAngle: 60
+  bufferZone: 2.3
+  waitPaceDistance: 0.8
+  waitPaceSpeed: 1.1
   bossAttackType: 0
   slamRange: 1.8
   slamDamage: 5
@@ -240,4 +238,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db58898e6b8644b40adb6b31a5678832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 30

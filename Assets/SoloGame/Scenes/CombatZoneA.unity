@@ -6515,8 +6515,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5625569136032294536}
     - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: comboInputWindow
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: groundLayer.m_Bits
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.size
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: comboSequence.Array.size
@@ -6534,6 +6542,54 @@ PrefabInstance:
       propertyPath: 'comboSequence.Array.data[2]'
       value: 
       objectReference: {fileID: 11400000, guid: 9aff44d74c8e56247b026df430b002ab, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[0].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: 938dad4df14d6754db4ae7aaa20a823a, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[1].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: c721b78c2713f2649b7d342a96170316, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[2].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: 494e36a430511c5409b4f2b7cb18c595, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[3].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: ec871dcdb963bab4ab6007d13af4aba2, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[4].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: 2ebe1a87f37188b42b7d3f8eb079109e, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[5].attackData
+      value: 
+      objectReference: {fileID: 11400000, guid: 1017627581f2c434d8b182ca046e88d7, type: 2}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[0].comboPattern
+      value: J
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[1].comboPattern
+      value: JJ
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[2].comboPattern
+      value: JJJ
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[3].comboPattern
+      value: K
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[4].comboPattern
+      value: KK
+      objectReference: {fileID: 0}
+    - target: {fileID: 940736084987223559, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
+      propertyPath: groundCombos.Array.data[5].comboPattern
+      value: KKK
+      objectReference: {fileID: 0}
     - target: {fileID: 3001479114626292222, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: m_LocalScale.y
       value: 1
@@ -6616,11 +6672,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5303424496487369442, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 1.1666666
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5303424496487369442, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 2
+      value: 1.9375
       objectReference: {fileID: 0}
     - target: {fileID: 7569330802048851124, guid: 1de89efd4cccb3347b4d368695aeb11e, type: 3}
       propertyPath: m_CollisionDetection

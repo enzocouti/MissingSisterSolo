@@ -1,256 +1,188 @@
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-[RequireComponent(typeof(PlayerCombatInput))]
-[RequireComponent(typeof(PlayerStateMachine))]
 public class PlayerCombat : MonoBehaviour
 {
+    [Header("Combo System")]
+    [SerializeField] private List<ComboEntry> groundCombos;
+
+    [Header("Settings")]
+    public Transform hitboxOrigin;
+    public float comboInputWindow = 0.4f; // Time allowed to continue the combo
+
+    [Header("References")]
     public Rigidbody2D rb;
     public SpriteRenderer spriteRenderer;
-    public Transform hitboxOrigin;
-
     public PlayerCombatInput input;
     public PlayerStateMachine stateMachine;
 
-    public PlayerAttackData[] comboSequence;
-    public PlayerAttackData launcherAttack;
-    public PlayerAttackData airLightAttack;
-    public PlayerAttackData airHeavyAttack;
+    [HideInInspector] public bool isFacingRight = true;
+    [HideInInspector] public bool isAttacking = false;
+    [HideInInspector] public bool isDashInvincible = false;
 
-    public float jumpHeight = 2f;
-    public float jumpDuration = 0.5f;
-    public bool isJumping { get; private set; }
-    public bool IsGrounded { get; private set; } = true;
+    private string currentComboPattern = ""; // E.g. "J", "JJ", "JK", etc.
+    private float comboTimer = 0f;
+    private bool isComboActive = false; // Are we in a combo chain?
 
-    public bool isFacingRight = true;
-    public float dashSpeed = 12f;
-    public bool isAttacking = false;
-
-    // Dash fields
+    [Header("Dash Settings")]
     public float dashDistance = 3f;
     public float dashDuration = 0.2f;
-    public string dashIgnoreTag = "Enemy";
+    public float dashInvincibleTime = 0.18f;
+
     private bool isDashing = false;
-
-    private int currentComboIndex = 0;
-    private float comboTimer = 0f;
-    public float comboResetTime = 0.5f;
-
-    // Dash invincibility flag
-    public bool isDashInvincible = false;
 
     private void Awake()
     {
-        input = GetComponent<PlayerCombatInput>();
-        stateMachine = GetComponent<PlayerStateMachine>();
-        rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (!input) input = GetComponent<PlayerCombatInput>();
+        if (!stateMachine) stateMachine = GetComponent<PlayerStateMachine>();
+        if (!rb) rb = GetComponent<Rigidbody2D>();
+        if (!spriteRenderer) spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
     {
-        input.OnLightAttack += HandleLightAttack;
-        input.OnHeavyAttack += HandleHeavyAttack;
-        input.OnJump += HandleJump;
-        input.OnLauncher += HandleLauncher;
+        input.OnLightAttack += OnJPressed;
+        input.OnHeavyAttack += OnKPressed;
         input.OnDash += HandleDash;
     }
 
     private void OnDisable()
     {
-        input.OnLightAttack -= HandleLightAttack;
-        input.OnHeavyAttack -= HandleHeavyAttack;
-        input.OnJump -= HandleJump;
-        input.OnLauncher -= HandleLauncher;
+        input.OnLightAttack -= OnJPressed;
+        input.OnHeavyAttack -= OnKPressed;
         input.OnDash -= HandleDash;
     }
 
     private void Update()
     {
         UpdateFacingDirection();
-        UpdateComboTimer();
+
+        // If combo is active, countdown window
+        if (isComboActive && !isAttacking)
+        {
+            comboTimer -= Time.deltaTime;
+            if (comboTimer <= 0f)
+            {
+                Debug.Log("[Combo] Combo timer expired, resetting.");
+                ResetCombo();
+            }
+        }
     }
 
     private void UpdateFacingDirection()
     {
-        if (isAttacking) return;
-
-        if (input.moveInput.x > 0.01f) FaceRight();
-        else if (input.moveInput.x < -0.01f) FaceLeft();
+        if (isAttacking || isDashing) return;
+        if (input.moveInput.x > 0.1f) FaceRight();
+        else if (input.moveInput.x < -0.1f) FaceLeft();
     }
 
     private void FaceRight()
     {
-        if (!isFacingRight)
-        {
-            isFacingRight = true;
-            spriteRenderer.flipX = false;
-        }
+        isFacingRight = true;
+        spriteRenderer.flipX = false;
     }
 
     private void FaceLeft()
     {
-        if (isFacingRight)
+        isFacingRight = false;
+        spriteRenderer.flipX = true;
+    }
+
+    // === INPUT HANDLING ===
+
+    private void OnJPressed()
+    {
+        HandleComboInput("J");
+    }
+
+    private void OnKPressed()
+    {
+        HandleComboInput("K");
+    }
+
+    private void HandleComboInput(string inputKey)
+    {
+        // Ignore if attacking (let attack finish)
+        if (isAttacking) return;
+
+        // If we're not in a combo, start one
+        if (!isComboActive)
         {
-            isFacingRight = false;
-            spriteRenderer.flipX = true;
+            currentComboPattern = inputKey;
+            isComboActive = true;
+        }
+        else
+        {
+            // Continue chain (append input)
+            currentComboPattern += inputKey;
+        }
+
+        Debug.Log($"[ComboBuffer] Buffer now: {currentComboPattern}");
+
+        var entry = groundCombos.Find(c => c.comboPattern == currentComboPattern);
+        if (entry != null)
+        {
+            // Reset/combo timer for next input
+            comboTimer = comboInputWindow;
+            isAttacking = true;
+            stateMachine.ChangeState(new AttackState(this, entry.attackData));
+            Debug.Log($"[ComboBuffer] Matched: {currentComboPattern} -> {entry.attackData.attackName}");
+        }
+        else
+        {
+            Debug.Log($"[ComboBuffer] Pattern {currentComboPattern} not found, resetting.");
+            ResetCombo();
         }
     }
 
-    private void UpdateComboTimer()
-    {
-        if (comboTimer > 0)
-        {
-            comboTimer -= Time.deltaTime;
-            if (comboTimer <= 0)
-                currentComboIndex = 0;
-        }
-    }
-
-    private void HandleLightAttack()
-    {
-        if (!IsGrounded)
-        {
-            StartAttack(airLightAttack);
-            return;
-        }
-
-        PlayerAttackData attack = comboSequence[Mathf.Clamp(currentComboIndex, 0, comboSequence.Length - 1)];
-        StartAttack(attack);
-        currentComboIndex++;
-        comboTimer = comboResetTime;
-    }
-
-    private void HandleHeavyAttack()
-    {
-        if (!IsGrounded)
-        {
-            StartAttack(airHeavyAttack);
-            return;
-        }
-
-        StartAttack(comboSequence[comboSequence.Length - 1]);
-        currentComboIndex = 0;
-        comboTimer = 0;
-    }
-
-    private void HandleLauncher()
-    {
-        if (!IsGrounded || isAttacking) return;
-
-        Debug.Log("Launcher input");
-        StartAttack(launcherAttack);
-        currentComboIndex = 0;
-        comboTimer = 0;
-    }
-
-    private void HandleJump()
-    {
-        if (!IsGrounded || isJumping) return;
-        StartCoroutine(SimulateJump());
-    }
-
-    private void HandleDash()
-    {
-        if (isAttacking || isJumping || isDashing) return;
-        StartCoroutine(DashCoroutine());
-        Debug.Log("Dash");
-    }
-
-    private void StartAttack(PlayerAttackData attack)
-    {
-        isAttacking = true;
-        rb.linearVelocity = Vector2.zero;
-        stateMachine.ChangeState(new AttackState(this, attack));
-    }
-
+    // Called by AttackState when attack ends
     public void OnAttackEnd()
     {
         isAttacking = false;
+        if (isComboActive)
+        {
+            // After attack, give window for next input. If timer expires, combo resets in Update().
+            comboTimer = comboInputWindow;
+        }
     }
 
-    private IEnumerator SimulateJump()
+    private void ResetCombo()
     {
-        isJumping = true;
-        IsGrounded = false;
-
-        Vector3 startPos = transform.position;
-        float timer = 0f;
-
-        bool moving = Mathf.Abs(input.moveInput.x) > 0.01f;
-        Vector3 jumpTarget = startPos;
-        string jumpType = "Straight jump";
-
-        if (moving)
-        {
-            float arcDistance = 1.2f;
-            float horizontalOffset = isFacingRight ? arcDistance : -arcDistance;
-            jumpTarget = startPos + new Vector3(horizontalOffset, 0, 0);
-            jumpType = isFacingRight ? "Directional jump RIGHT" : "Directional jump LEFT";
-        }
-
-        Debug.Log(jumpType);
-
-        while (timer < jumpDuration)
-        {
-            float progress = timer / jumpDuration;
-            float yOffset = Mathf.Sin(progress * Mathf.PI) * jumpHeight;
-            Vector3 horizontal = Vector3.Lerp(startPos, jumpTarget, progress);
-            transform.position = new Vector3(horizontal.x, startPos.y + yOffset, startPos.z);
-
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.position = new Vector3(jumpTarget.x, startPos.y, startPos.z);
-        isJumping = false;
-        IsGrounded = true;
+        isComboActive = false;
+        currentComboPattern = "";
+        comboTimer = 0f;
+        isAttacking = false;
     }
 
-    private IEnumerator DashCoroutine()
+    // === DASH ===
+
+    private void HandleDash()
+    {
+        if (isAttacking || isDashing) return;
+        StartCoroutine(DashRoutine());
+    }
+
+    private System.Collections.IEnumerator DashRoutine()
     {
         isDashing = true;
         isDashInvincible = true;
 
-        // Only ignore colliders with tag "Enemy"
-        Collider2D[] myCols = GetComponents<Collider2D>();
-        List<Collider2D> ignored = new List<Collider2D>();
-        Collider2D[] allCols = GameObject.FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
-
-        foreach (var col in allCols)
-        {
-            if (col.CompareTag(dashIgnoreTag))
-            {
-                foreach (var myCol in myCols)
-                    Physics2D.IgnoreCollision(myCol, col, true);
-                ignored.Add(col);
-            }
-        }
-
         Vector3 start = transform.position;
-        float direction = isFacingRight ? 1f : -1f;
-        Vector3 target = start + new Vector3(dashDistance * direction, 0f, 0f);
+        float dir = isFacingRight ? 1f : -1f;
+        Vector3 end = start + new Vector3(dashDistance * dir, 0f, 0f);
 
         float elapsed = 0f;
         while (elapsed < dashDuration)
         {
             float t = elapsed / dashDuration;
-            transform.position = Vector3.Lerp(start, target, t);
+            transform.position = Vector3.Lerp(start, end, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
+        transform.position = end;
 
-        transform.position = target;
-
-        // Restore collisions with enemies
-        foreach (var col in ignored)
-        {
-            foreach (var myCol in myCols)
-                Physics2D.IgnoreCollision(myCol, col, false);
-        }
-
-        isDashing = false;
+        yield return new WaitForSeconds(dashInvincibleTime);
         isDashInvincible = false;
+        isDashing = false;
     }
 }
