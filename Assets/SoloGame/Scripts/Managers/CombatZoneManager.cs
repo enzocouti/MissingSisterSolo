@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using TMPro;
 
 public class CombatZoneManager : MonoBehaviour
 {
@@ -26,11 +27,11 @@ public class CombatZoneManager : MonoBehaviour
     public GameObject goText;
     public GameObject baseClearedText;
     public GameObject bossHealthUI;
-    public GameObject defeatBlackout; 
+    public GameObject defeatBlackout;
 
     [Header("Boss VN")]
     public DialogueSequence bossDialogueData;
-    public DialogueSequence defeatDialogue; 
+    public DialogueSequence defeatDialogue;
     public DialogueManager dialogueManager;
 
     [Header("Settings")]
@@ -40,6 +41,13 @@ public class CombatZoneManager : MonoBehaviour
     private GameObject currentBoss;
     private List<GameObject> currentEnemies = new List<GameObject>();
 
+    // -- FLASHING GO! TEXT --
+    private Coroutine goFlashCoroutine;
+    [Header("GO! Text Flash Settings")]
+    public Color goTextColor1 = Color.black;
+    public Color goTextColor2 = Color.red;
+    public float goTextFlashSpeed = 0.7f;
+
     private void Awake()
     {
         Instance = this;
@@ -47,7 +55,11 @@ public class CombatZoneManager : MonoBehaviour
 
     private void Start()
     {
-        if (goText) goText.SetActive(true);
+        if (goText)
+        {
+            goText.SetActive(true);
+            StartGOFlashing();
+        }
         if (baseClearedText) baseClearedText.SetActive(false);
         if (bossHealthUI) bossHealthUI.SetActive(false);
         if (defeatBlackout) defeatBlackout.SetActive(false);
@@ -59,7 +71,7 @@ public class CombatZoneManager : MonoBehaviour
 
     public void TriggerWave(int waveIndex)
     {
-        goText.SetActive(false);
+        SetGOTextActive(false);
 
         switch (waveIndex)
         {
@@ -94,13 +106,13 @@ public class CombatZoneManager : MonoBehaviour
 
         blockade?.SetActive(false);
         SideCameraFollow.Instance?.Unlock();
-        goText.SetActive(true);
+        SetGOTextActive(true);
     }
 
     IEnumerator StartBossSequence()
     {
         blockade3?.SetActive(true);
-        goText.SetActive(false);
+        SetGOTextActive(false);
 
         dialogueManager.onDialogueEnd = () =>
         {
@@ -134,7 +146,7 @@ public class CombatZoneManager : MonoBehaviour
         GameManager.Instance.LoadScene(overworldSceneName);
     }
 
-    
+
     public void HandlePlayerDefeat()
     {
         StartCoroutine(HandlePlayerDefeatRoutine());
@@ -161,7 +173,7 @@ public class CombatZoneManager : MonoBehaviour
         yield return null;
     }
 
-   
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha9))
@@ -184,5 +196,69 @@ public class CombatZoneManager : MonoBehaviour
         {
             currentEnemies.Remove(enemy);
         }
+    }
+
+    // -- GO! TEXT FLASHING LOGIC --
+
+    private void SetGOTextActive(bool isActive)
+    {
+        if (goText)
+        {
+            goText.SetActive(isActive);
+            if (isActive)
+            {
+                StartGOFlashing();
+            }
+            else
+            {
+                StopGOFlashing();
+            }
+        }
+    }
+
+    private void StartGOFlashing()
+    {
+        StopGOFlashing();
+        goFlashCoroutine = StartCoroutine(FlashGOText());
+    }
+
+    private void StopGOFlashing()
+    {
+        if (goFlashCoroutine != null)
+        {
+            StopCoroutine(goFlashCoroutine);
+            goFlashCoroutine = null;
+        }
+        // Restore to default color for safety
+        SetGOTextColor(goTextColor1);
+    }
+
+    private IEnumerator FlashGOText()
+    {
+        if (goText == null) yield break;
+
+        var tmp = goText.GetComponent<TMPro.TMP_Text>();
+        if (!tmp) tmp = goText.GetComponentInChildren<TMPro.TMP_Text>();
+        if (!tmp) yield break;
+
+        float t = 0f;
+        while (goText.activeSelf)
+        {
+            t += Time.unscaledDeltaTime * (1f / goTextFlashSpeed);
+            float lerp = Mathf.PingPong(t, 1f);
+            tmp.color = Color.Lerp(goTextColor1, goTextColor2, lerp);
+            yield return null;
+        }
+        // Restore color after hiding
+        tmp.color = goTextColor1;
+    }
+
+    private void SetGOTextColor(Color color)
+    {
+        if (goText == null) return;
+        var tmp = goText.GetComponent<TMPro.TMP_Text>();
+        if (!tmp) tmp = goText.GetComponentInChildren<TMPro.TMP_Text>();
+        if (!tmp) return;
+        tmp.color = color;
     }
 }

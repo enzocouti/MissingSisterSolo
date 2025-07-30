@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Finisher4
   damage: 3
-  attackDuration: 0.7
+  attackDuration: 0.4
   hitboxSize: {x: 1, y: 1}
   hitboxOffset: {x: 1, y: 0}
   isLauncher: 0

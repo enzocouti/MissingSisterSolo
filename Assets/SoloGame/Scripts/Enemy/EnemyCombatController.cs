@@ -12,36 +12,36 @@ public class EnemyCombatController : MonoBehaviour
     public int touchDamage = 2;
 
     [Header("Attack Logic")]
-    [Range(0, 180)] public float attackAngle = 60f; // degrees cone in front
-    public float bufferZone = 2.3f;  // Increased buffer spacing!
-    public float waitPaceDistance = 0.8f; // Wider pacing!
+    [Range(0, 180)] public float attackAngle = 60f;
+    public float bufferZone = 2.3f;
+    public float waitPaceDistance = 0.8f;
     public float waitPaceSpeed = 1.1f;
 
     public static List<EnemyCombatController> allEnemies = new List<EnemyCombatController>();
 
     protected Transform player;
     protected bool isAttacking = false;
-    private bool isDead = false;
-    private bool isHurt = false;
+    protected bool isDead = false;
+    protected bool isHurt = false;
     protected bool isLaunched = false;
 
     protected SpriteRenderer spriteRenderer;
-    protected Color baseColor;
+    public Color baseColor;
 
     private float waitPaceTimer = 0f;
     private int waitPaceDir = 1;
 
-    private void OnEnable() { allEnemies.Add(this); }
-    private void OnDisable() { allEnemies.Remove(this); }
+    protected virtual void OnEnable() { allEnemies.Add(this); }
+    protected virtual void OnDisable() { allEnemies.Remove(this); }
 
-    private void Start()
+    protected virtual void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         spriteRenderer = GetComponent<SpriteRenderer>();
         baseColor = spriteRenderer ? spriteRenderer.color : Color.white;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (isDead || isHurt || isLaunched) return;
         if (player == null)
@@ -110,13 +110,13 @@ public class EnemyCombatController : MonoBehaviour
         }
     }
 
-    void MoveTowards(Vector3 target, float speed)
+    protected void MoveTowards(Vector3 target, float speed)
     {
         Vector3 dir = (target - transform.position).normalized;
         transform.position += dir * speed * Time.deltaTime;
     }
 
-    bool PlayerIsInFront(Vector2 toPlayer)
+    protected bool PlayerIsInFront(Vector2 toPlayer)
     {
         Vector2 facing = spriteRenderer.flipX ? Vector2.left : Vector2.right;
         float angle = Vector2.Angle(facing, toPlayer);
@@ -169,7 +169,7 @@ public class EnemyCombatController : MonoBehaviour
         isAttacking = false;
     }
 
-    public void OnHurt(PlayerAttackData attackData, bool playerIsFacingRight)
+    public virtual void OnHurt(PlayerAttackData attackData, bool playerIsFacingRight)
     {
         if (isDead) return;
         if (attackData.isLauncher)
@@ -186,7 +186,7 @@ public class EnemyCombatController : MonoBehaviour
         }
     }
 
-    public void OnDeath()
+    public virtual void OnDeath()
     {
         isDead = true;
         StopAllCoroutines();
@@ -194,7 +194,7 @@ public class EnemyCombatController : MonoBehaviour
             spriteRenderer.color = Color.gray;
     }
 
-    IEnumerator HurtFeedback()
+    protected IEnumerator HurtFeedback()
     {
         isHurt = true;
         if (spriteRenderer) spriteRenderer.color = Color.red;
@@ -222,7 +222,7 @@ public class EnemyCombatController : MonoBehaviour
         isHurt = false;
     }
 
-    IEnumerator KnockbackCoroutine(PlayerAttackData attackData, bool playerIsFacingRight)
+    protected IEnumerator KnockbackCoroutine(PlayerAttackData attackData, bool playerIsFacingRight)
     {
         isLaunched = true;
         float duration = 0.35f;
@@ -248,7 +248,7 @@ public class EnemyCombatController : MonoBehaviour
         isLaunched = false;
     }
 
-    IEnumerator LaunchCoroutine(PlayerAttackData attackData, bool playerIsFacingRight)
+    protected IEnumerator LaunchCoroutine(PlayerAttackData attackData, bool playerIsFacingRight)
     {
         isLaunched = true;
         float duration = attackData.launchDuration;

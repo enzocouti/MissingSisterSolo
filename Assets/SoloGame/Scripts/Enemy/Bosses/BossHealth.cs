@@ -46,6 +46,11 @@ public class BossHealth : MonoBehaviour
             healthBar.size = (float)currentHealth / maxHealth;
     }
 
+    public float GetHealthPercent()
+    {
+        return (float)currentHealth / maxHealth;
+    }
+
     private void Die()
     {
         if (controller != null)

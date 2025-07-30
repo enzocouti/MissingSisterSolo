@@ -1,14 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
-// Boss inherits everything from normal enemy
 public class BossCombatController : EnemyCombatController
 {
     public enum BossAttackType { Slam, Dash }
     public BossAttackType bossAttackType = BossAttackType.Slam;
 
     [Header("Slam Attack")]
-    public float slamRange = 1.8f;   // Area
+    public float slamRange = 1.8f;
     public int slamDamage = 5;
     public float slamCooldown = 3f;
     [Range(0f, 1f)] public float slamChance = 0.45f;
@@ -22,7 +21,6 @@ public class BossCombatController : EnemyCombatController
     private float lastSlamTime = -99f;
     private float lastDashTime = -99f;
 
-    // Only this method is different!
     protected override void TryAttack()
     {
         // Slam
@@ -52,11 +50,11 @@ public class BossCombatController : EnemyCombatController
 
     IEnumerator SlamAttack()
     {
+        isAttacking = true;
         Debug.Log("[Boss] SLAM!");
-        if (spriteRenderer) spriteRenderer.color = Color.yellow; // Yellow for attack windup
+        if (spriteRenderer) spriteRenderer.color = Color.yellow;
         yield return new WaitForSeconds(0.18f);
 
-        // Hit player if in slam range
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, slamRange);
         foreach (var hit in hits)
         {
@@ -69,21 +67,24 @@ public class BossCombatController : EnemyCombatController
         }
         yield return new WaitForSeconds(0.12f);
 
-        if (spriteRenderer) spriteRenderer.color = baseColor; // Restore color after attack
+        if (spriteRenderer) spriteRenderer.color = baseColor;
+        yield return new WaitForSeconds(slamCooldown);
+        isAttacking = false;
     }
 
     IEnumerator DashAttack()
     {
+        isAttacking = true;
         Debug.Log("[Boss] DASH!");
-        if (spriteRenderer) spriteRenderer.color = Color.yellow; // Yellow for dash windup
+        if (spriteRenderer) spriteRenderer.color = Color.yellow;
 
         Vector3 start = transform.position;
         Vector3 dir = player ? (player.position - transform.position).normalized : Vector3.right;
-        dir.y = 0; // X axis only
+        dir.y = 0;
         float dashDuration = dashLength / dashSpeed;
         float t = 0f;
 
-        isLaunched = true; // Prevent moving/attacking during dash
+        isLaunched = true;
 
         while (t < dashDuration)
         {
@@ -92,7 +93,6 @@ public class BossCombatController : EnemyCombatController
             yield return null;
         }
 
-        // Hit if player is close after dash
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1.2f);
         foreach (var hit in hits)
         {
@@ -105,7 +105,9 @@ public class BossCombatController : EnemyCombatController
         }
 
         isLaunched = false;
+        yield return new WaitForSeconds(dashCooldown);
 
         if (spriteRenderer) spriteRenderer.color = baseColor;
+        isAttacking = false;
     }
 }
