@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using TMPro;
 
 public class CombatZoneManager : MonoBehaviour
 {
@@ -24,10 +23,16 @@ public class CombatZoneManager : MonoBehaviour
     public GameObject blockade3;
 
     [Header("UI")]
-    public GameObject goText;
+    public GameObject goIconObject;  
+    public Image goIconImage;        
     public GameObject baseClearedText;
     public GameObject bossHealthUI;
     public GameObject defeatBlackout;
+
+    [Header("GO! Icon Flash Settings")]
+    public Color goIconColor1 = Color.black;
+    public Color goIconColor2 = Color.red;
+    public float goIconFlashSpeed = 0.7f;
 
     [Header("Boss VN")]
     public DialogueSequence bossDialogueData;
@@ -41,12 +46,7 @@ public class CombatZoneManager : MonoBehaviour
     private GameObject currentBoss;
     private List<GameObject> currentEnemies = new List<GameObject>();
 
-    // -- FLASHING GO! TEXT --
     private Coroutine goFlashCoroutine;
-    [Header("GO! Text Flash Settings")]
-    public Color goTextColor1 = Color.black;
-    public Color goTextColor2 = Color.red;
-    public float goTextFlashSpeed = 0.7f;
 
     private void Awake()
     {
@@ -55,10 +55,10 @@ public class CombatZoneManager : MonoBehaviour
 
     private void Start()
     {
-        if (goText)
+        if (goIconObject)
         {
-            goText.SetActive(true);
-            StartGOFlashing();
+            goIconObject.SetActive(true);
+            StartGOIconFlashing();
         }
         if (baseClearedText) baseClearedText.SetActive(false);
         if (bossHealthUI) bossHealthUI.SetActive(false);
@@ -71,7 +71,7 @@ public class CombatZoneManager : MonoBehaviour
 
     public void TriggerWave(int waveIndex)
     {
-        SetGOTextActive(false);
+        SetGOIconActive(false);
 
         switch (waveIndex)
         {
@@ -106,13 +106,13 @@ public class CombatZoneManager : MonoBehaviour
 
         blockade?.SetActive(false);
         SideCameraFollow.Instance?.Unlock();
-        SetGOTextActive(true);
+        SetGOIconActive(true);
     }
 
     IEnumerator StartBossSequence()
     {
         blockade3?.SetActive(true);
-        SetGOTextActive(false);
+        SetGOIconActive(false);
 
         dialogueManager.onDialogueEnd = () =>
         {
@@ -146,7 +146,6 @@ public class CombatZoneManager : MonoBehaviour
         GameManager.Instance.LoadScene(overworldSceneName);
     }
 
-
     public void HandlePlayerDefeat()
     {
         StartCoroutine(HandlePlayerDefeatRoutine());
@@ -173,7 +172,6 @@ public class CombatZoneManager : MonoBehaviour
         yield return null;
     }
 
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha9))
@@ -198,67 +196,64 @@ public class CombatZoneManager : MonoBehaviour
         }
     }
 
-    // -- GO! TEXT FLASHING LOGIC --
+   
 
-    private void SetGOTextActive(bool isActive)
+    private void SetGOIconActive(bool isActive)
     {
-        if (goText)
+        if (goIconObject)
         {
-            goText.SetActive(isActive);
+            goIconObject.SetActive(isActive);
             if (isActive)
             {
-                StartGOFlashing();
+                StartGOIconFlashing();
             }
             else
             {
-                StopGOFlashing();
+                StopGOIconFlashing();
             }
         }
     }
 
-    private void StartGOFlashing()
+    private void StartGOIconFlashing()
     {
-        StopGOFlashing();
-        goFlashCoroutine = StartCoroutine(FlashGOText());
+        StopGOIconFlashing();
+        goFlashCoroutine = StartCoroutine(FlashGOIcon());
     }
 
-    private void StopGOFlashing()
+    private void StopGOIconFlashing()
     {
         if (goFlashCoroutine != null)
         {
             StopCoroutine(goFlashCoroutine);
             goFlashCoroutine = null;
         }
-        // Restore to default color for safety
-        SetGOTextColor(goTextColor1);
+        SetGOIconColor(goIconColor1);
     }
 
-    private IEnumerator FlashGOText()
+    private IEnumerator FlashGOIcon()
     {
-        if (goText == null) yield break;
-
-        var tmp = goText.GetComponent<TMPro.TMP_Text>();
-        if (!tmp) tmp = goText.GetComponentInChildren<TMPro.TMP_Text>();
-        if (!tmp) yield break;
+        if (goIconImage == null)
+        {
+            goIconImage = goIconObject.GetComponent<Image>();
+            if (goIconImage == null) yield break;
+        }
 
         float t = 0f;
-        while (goText.activeSelf)
+        while (goIconObject.activeSelf)
         {
-            t += Time.unscaledDeltaTime * (1f / goTextFlashSpeed);
+            t += Time.unscaledDeltaTime * (1f / goIconFlashSpeed);
             float lerp = Mathf.PingPong(t, 1f);
-            tmp.color = Color.Lerp(goTextColor1, goTextColor2, lerp);
+            goIconImage.color = Color.Lerp(goIconColor1, goIconColor2, lerp);
             yield return null;
         }
-        // Restore color after hiding
-        tmp.color = goTextColor1;
+        goIconImage.color = goIconColor1;
     }
 
-    private void SetGOTextColor(Color color)
+    private void SetGOIconColor(Color color)
     {
-        if (goText == null) return;
-        var tmp = goText.GetComponent<TMPro.TMP_Text>();
-        if (!tmp) tmp = goText.GetComponentInChildren<TMPro.TMP_Text>();
-        if (!tmp) return;
-        tmp.color = color;
+        if (goIconImage == null)
+            goIconImage = goIconObject.GetComponent<Image>();
+        if (goIconImage != null)
+            goIconImage.color = color;
     }
 }
