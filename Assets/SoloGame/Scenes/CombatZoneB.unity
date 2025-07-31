@@ -178,7 +178,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1341670693
-  m_SortingLayer: 12
+  m_SortingLayer: 13
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -566,7 +566,7 @@ MonoBehaviour:
   wave2Enemies:
   - {fileID: 3710608012585119877, guid: b3dd3328035f325429da6bada56e5652, type: 3}
   - {fileID: 3710608012585119877, guid: b3dd3328035f325429da6bada56e5652, type: 3}
-  bossPrefab: {fileID: 3710608012585119877, guid: ef8755c348db8b74fa0edb4e2c74a507, type: 3}
+  bossPrefab: {fileID: 3710608012585119877, guid: a3c2e2f3a3bb32f408633955265bb8d9, type: 3}
   spawnPoint1: {fileID: 1302921281}
   spawnPoint2: {fileID: 1862415788}
   spawnPoint3: {fileID: 279131320}

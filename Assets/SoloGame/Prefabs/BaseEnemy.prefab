@@ -184,17 +184,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.084747314, y: 1.1740112}
+  m_Offset: {x: 0.0947876, y: 1.0169067}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.42105263, y: 0}
-    oldSize: {x: 1.3571428, y: 2.2142856}
+    oldSize: {x: 1.1875, y: 1.9375}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.477356, y: 2.1795044}
+  m_Size: {x: 1.2434082, y: 1.8652954}
   m_EdgeRadius: 0
 --- !u!114 &6578758606497717613
 MonoBehaviour:
@@ -223,11 +223,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2.5
   detectionRange: 15
-  attackRange: 1
+  attackRange: 1.5
   attackCooldown: 1.5
   touchDamage: 10
-  attackAngle: 60
-  bufferZone: 3
-  waitPaceDistance: 2
-  waitPaceSpeed: 0.05
+  attackAngle: 20
+  bufferZone: 4
+  waitPaceDistance: 0.5
+  waitPaceSpeed: 0.01
   baseColor: {r: 0, g: 0, b: 0, a: 0}
