@@ -218,7 +218,7 @@ MonoBehaviour:
   waitPaceDistance: 0.8
   waitPaceSpeed: 1.1
   baseColor: {r: 0, g: 0, b: 0, a: 0}
-  bossAttackType: 0
+  bossAttackType: 1
   slamRange: 1.8
   slamDamage: 5
   slamCooldown: 3
@@ -239,4 +239,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db58898e6b8644b40adb6b31a5678832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 30
+  maxHealth: 60
