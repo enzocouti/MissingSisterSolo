@@ -77,6 +77,9 @@ TagManager:
   - name: Enemy
     uniqueID: 2910098221
     locked: 0
+  - name: Lamppost
+    uniqueID: 3261354249
+    locked: 0
   - name: Blackout
     uniqueID: 1341670693
     locked: 0
