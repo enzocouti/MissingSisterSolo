@@ -64,6 +64,11 @@ public class GameManager : MonoBehaviour
     public int GetSkullCount() => skullCount;
     public bool IsSkyscraperUnlocked() => hasUnlockedSkyscraper;
 
+    
+    public bool IsAlphaBaseCleared() => isAlphaBaseCleared;
+    public bool IsBravoBaseCleared() => isBravoBaseCleared;
+    
+
     public void LoadScene(string sceneName)
     {
         if (!string.IsNullOrWhiteSpace(sceneName))

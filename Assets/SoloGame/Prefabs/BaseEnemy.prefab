@@ -222,12 +222,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2.5
-  detectionRange: 15
+  detectionRange: 7
   attackRange: 1.5
   attackCooldown: 1.5
   touchDamage: 10
-  attackAngle: 20
-  bufferZone: 4
-  waitPaceDistance: 0.5
-  waitPaceSpeed: 0.01
+  baseHurtPause: 0.28
+  maxSimultaneousAttackers: 2
+  bufferDistance: 1.1
+  waitShuffleSpeed: 0.13
+  waitMinDistance: 1.8
+  deathLayTime: 0.7
+  deathFlashTime: 0.8
+  deathFlashInterval: 0.13
+  isAttacking: 0
+  isDead: 0
+  isHurt: 0
+  isLaunched: 0
   baseColor: {r: 0, g: 0, b: 0, a: 0}

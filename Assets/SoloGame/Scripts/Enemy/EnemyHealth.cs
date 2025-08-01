@@ -3,46 +3,30 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     public int maxHealth = 12;
-    private int currentHealth;
+    int currentHealth;
+    EnemyCombatController controller;
 
-    private EnemyCombatController controller;
-
-    private void Awake()
+    void Awake()
     {
         currentHealth = maxHealth;
         controller = GetComponent<EnemyCombatController>();
     }
 
-    // playerIsFacingRight means true = knock right, false = knock left
-    public void TakeDamage(PlayerAttackData attackData, bool playerIsFacingRight)
+    public void TakeDamage(PlayerAttackData data, bool facingRight)
     {
         if (currentHealth <= 0) return;
-
-        currentHealth -= (int)attackData.damage;
-
-        Debug.Log($"[EnemyHealth] {gameObject.name} took {attackData.damage} ({currentHealth}/{maxHealth}) from {attackData.attackName}");
-
-        // Pass correct direction to the controller
-        if (controller != null)
-            controller.OnHurt(attackData, playerIsFacingRight);
+        currentHealth -= (int)data.damage;
+        Debug.Log($"Hit {gameObject.name}: {data.damage} dmg, left {currentHealth}/{maxHealth}");
+        controller?.OnHurt(data, facingRight);
 
         if (currentHealth <= 0)
-        {
             Die();
-        }
     }
 
-    public void Die()
+    void Die()
     {
-        Debug.Log($"[EnemyHealth] {gameObject.name} died!");
-
-        if (controller != null)
-            controller.OnDeath();
-
-        // Notify CombatZoneManager that this enemy is gone
-        if (CombatZoneManager.Instance != null)
-            CombatZoneManager.Instance.NotifyEnemyKilled(gameObject);
-
-        Destroy(gameObject, 0.1f); // Give time for feedback
+        Debug.Log($"{gameObject.name} died");
+        controller?.OnDeath();
+        CombatZoneManager.Instance?.NotifyEnemyKilled(gameObject);
     }
 }

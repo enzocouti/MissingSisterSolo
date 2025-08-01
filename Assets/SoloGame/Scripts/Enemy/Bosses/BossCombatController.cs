@@ -21,31 +21,31 @@ public class BossCombatController : EnemyCombatController
     private float lastSlamTime = -99f;
     private float lastDashTime = -99f;
 
-    protected override void TryAttack()
+    protected override IEnumerator AttackCoroutine()
     {
-        // Slam
-        if (bossAttackType == BossAttackType.Slam)
+        // If boss should use a special attack
+        bool usedSpecial = false;
+
+        if (bossAttackType == BossAttackType.Slam &&
+            Time.time - lastSlamTime >= slamCooldown && Random.value < slamChance)
         {
-            if (Time.time - lastSlamTime >= slamCooldown && Random.value < slamChance)
-            {
-                StartCoroutine(SlamAttack());
-                lastSlamTime = Time.time;
-                return;
-            }
+            yield return StartCoroutine(SlamAttack());
+            lastSlamTime = Time.time;
+            usedSpecial = true;
         }
-        // Dash
-        else if (bossAttackType == BossAttackType.Dash)
+        else if (bossAttackType == BossAttackType.Dash &&
+                 Time.time - lastDashTime >= dashCooldown)
         {
-            if (Time.time - lastDashTime >= dashCooldown)
-            {
-                StartCoroutine(DashAttack());
-                lastDashTime = Time.time;
-                return;
-            }
+            yield return StartCoroutine(DashAttack());
+            lastDashTime = Time.time;
+            usedSpecial = true;
         }
 
-        // Fallback to regular attack
-        base.TryAttack();
+        if (!usedSpecial)
+        {
+            // Fallback to normal attack
+            yield return base.AttackCoroutine();
+        }
     }
 
     IEnumerator SlamAttack()
