@@ -14,18 +14,17 @@ public class AttackState : IPlayerState
 
     public void Enter()
     {
-        timer = attackData.attackDuration; // attackDuration set per SO!
+        timer = attackData.attackDuration;
         SpawnHitbox();
-        // Play animation here in future using attackData.animationName etc.
     }
 
     public void Update()
     {
         timer -= Time.deltaTime;
-        if (timer <= 0)
+        if (timer <= 0f)
         {
             player.stateMachine.ChangeState(new IdleState(player));
-            player.OnAttackEnd(); // Key for buffering!
+            player.OnAttackEnd();
         }
     }
 
@@ -34,17 +33,23 @@ public class AttackState : IPlayerState
     private void SpawnHitbox()
     {
         GameObject hitbox = new GameObject("AttackHitbox");
-        hitbox.transform.parent = player.transform;
+        hitbox.transform.SetParent(player.transform, false);
 
-        float xOffset = player.isFacingRight ? attackData.hitboxOffset.x : -attackData.hitboxOffset.x;
-        Vector3 spawnPos = player.hitboxOrigin.position + new Vector3(xOffset, attackData.hitboxOffset.y, 0);
-        hitbox.transform.position = spawnPos;
+        float dir = player.isFacingRight ? 1f : -1f;
+        Vector3 offset = new Vector3(
+            attackData.hitboxOffset.x * dir,
+            attackData.hitboxOffset.y,
+            0f
+        );
+        hitbox.transform.position = player.hitboxOrigin.position + offset;
 
-        BoxCollider2D col = hitbox.AddComponent<BoxCollider2D>();
+        var col = hitbox.AddComponent<BoxCollider2D>();
         col.size = attackData.hitboxSize;
         col.isTrigger = true;
 
-        var hb = hitbox.AddComponent<PlayerHitbox>();
-        hb.attackData = attackData;
+        var phb = hitbox.AddComponent<PlayerHitbox>();
+        phb.attackData = attackData;
+
+        Object.Destroy(hitbox, attackData.attackDuration);
     }
 }

@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8428ae8eb49984b9c433f1784617a3, type: 3}
+  m_Name: FriendWomanFirst
+  m_EditorClassIdentifier: 
+  lines:
+  - speakerName: Friendly Woman
+    lineText: '"This town just keeps getting worse, first the gangs, now the enforcers
+      getting more agressive..."'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: -8617111398294895233, guid: 322920cb495890d418cc402b2c2cf5cc, type: 3}
+    highlightSide: 2
+  - speakerName: Friendly Man
+    lineText: '"I know, it sucks! like criminals with powers were not enough..."'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 4339691118676994282, guid: cadc714c1b0f639459e9f6446884e687, type: 3}
+    highlightSide: 2
+  - speakerName: Friendly Woman
+    lineText: '"and now the enforcers are using these weird high-tech stuff..."'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: -8617111398294895233, guid: 322920cb495890d418cc402b2c2cf5cc, type: 3}
+    highlightSide: 2
+  - speakerName: Friendly Man
+    lineText: '"Lets just stay away from the skyscraper..."'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 4339691118676994282, guid: cadc714c1b0f639459e9f6446884e687, type: 3}
+    highlightSide: 2
+  - speakerName: Friendly Woman
+    lineText: '"Agreed..."'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: -8617111398294895233, guid: 322920cb495890d418cc402b2c2cf5cc, type: 3}
+    highlightSide: 2
+  bgmClip: {fileID: 0}
+  playBGM: 1
+  disablePlayerInput: 1

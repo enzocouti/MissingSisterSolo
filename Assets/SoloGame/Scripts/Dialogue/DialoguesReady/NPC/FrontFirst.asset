@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8428ae8eb49984b9c433f1784617a3, type: 3}
+  m_Name: FrontFirst
+  m_EditorClassIdentifier: 
+  lines:
+  - speakerName: Angry Citizen
+    lineText: '"Dude, you see this sh#t?"'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 4339691118676994282, guid: cadc714c1b0f639459e9f6446884e687, type: 3}
+    highlightSide: 2
+  - speakerName: Drunk Citizen
+    lineText: '"UuHh?"'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 4339691118676994282, guid: cadc714c1b0f639459e9f6446884e687, type: 3}
+    highlightSide: 2
+  - speakerName: Angry Citizen
+    lineText: '"They parked right beside a criminal family heardquarters and they
+      are not doing anything!"'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 4339691118676994282, guid: cadc714c1b0f639459e9f6446884e687, type: 3}
+    highlightSide: 2
+  - speakerName: Drunk Citizen
+    lineText: '"Oh... leave them *hiccup* be..."'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 4339691118676994282, guid: cadc714c1b0f639459e9f6446884e687, type: 3}
+    highlightSide: 2
+  - speakerName: Angry Citizen
+    lineText: '"Guess whatever they closed the skyscraper for is more important..."'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 4339691118676994282, guid: cadc714c1b0f639459e9f6446884e687, type: 3}
+    highlightSide: 2
+  bgmClip: {fileID: 0}
+  playBGM: 1
+  disablePlayerInput: 1

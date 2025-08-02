@@ -1,17 +1,18 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
     [Header("Combo System")]
-    [SerializeField] private List<ComboEntry> groundCombos; // Set up in inspector (pattern: attackData)
+    [SerializeField] private List<ComboEntry> groundCombos;
+
     [Header("Settings")]
     public Transform hitboxOrigin;
     public float comboInputWindow = 0.5f;
 
     [Header("References")]
     public Rigidbody2D rb;
-    public SpriteRenderer spriteRenderer;
     public PlayerCombatInput input;
     public PlayerStateMachine stateMachine;
 
@@ -19,7 +20,7 @@ public class PlayerCombat : MonoBehaviour
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isDashInvincible = false;
 
-    private string currentCombo = "";        // e.g., "J", "JJ", etc.
+    private string currentCombo = "";
     private Queue<string> bufferedInputs = new Queue<string>();
     private float bufferTimer = 0f;
     private bool waitingForInput = false;
@@ -35,7 +36,6 @@ public class PlayerCombat : MonoBehaviour
         if (!input) input = GetComponent<PlayerCombatInput>();
         if (!stateMachine) stateMachine = GetComponent<PlayerStateMachine>();
         if (!rb) rb = GetComponent<Rigidbody2D>();
-        if (!spriteRenderer) spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
@@ -56,7 +56,6 @@ public class PlayerCombat : MonoBehaviour
     {
         UpdateFacingDirection();
 
-        // Handle buffer window timeout
         if (waitingForInput)
         {
             bufferTimer -= Time.deltaTime;
@@ -73,29 +72,31 @@ public class PlayerCombat : MonoBehaviour
     private void UpdateFacingDirection()
     {
         if (isAttacking || isDashing) return;
-        if (input.moveInput.x > 0.1f) FaceRight();
-        else if (input.moveInput.x < -0.1f) FaceLeft();
+
+        float xInput = input.moveInput.x;
+        if (xInput > 0.1f) FaceRight();
+        else if (xInput < -0.1f) FaceLeft();
     }
+
     private void FaceRight()
     {
         isFacingRight = true;
-        spriteRenderer.flipX = false;
+        transform.localScale = new Vector3(1f, 1f, 1f);
     }
+
     private void FaceLeft()
     {
         isFacingRight = false;
-        spriteRenderer.flipX = true;
+        transform.localScale = new Vector3(-1f, 1f, 1f);
     }
 
     private void HandleInput(string key)
     {
-        // If idle, start new combo
         if (!isAttacking)
         {
             currentCombo = key;
             StartComboAttack(currentCombo);
         }
-        // If attacking, queue up next combo input
         else
         {
             bufferedInputs.Enqueue(key);
@@ -123,11 +124,10 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    // Called by AttackState when an attack finishes
     public void OnAttackEnd()
     {
         isAttacking = false;
-        // If input(s) buffered, advance the combo
+
         if (bufferedInputs.Count > 0)
         {
             currentCombo += bufferedInputs.Dequeue();
@@ -136,10 +136,8 @@ public class PlayerCombat : MonoBehaviour
         }
         else
         {
-            // No input buffered, start window to accept next input for a follow-up
             waitingForInput = true;
             bufferTimer = comboInputWindow;
-            // If window expires, combo will be reset in Update
         }
     }
 
@@ -148,7 +146,8 @@ public class PlayerCombat : MonoBehaviour
         if (isAttacking || isDashing) return;
         StartCoroutine(DashRoutine());
     }
-    private System.Collections.IEnumerator DashRoutine()
+
+    private IEnumerator DashRoutine()
     {
         isDashing = true;
         isDashInvincible = true;

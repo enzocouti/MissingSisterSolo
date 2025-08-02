@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class GameManager : MonoBehaviour
     private bool isBravoBaseCleared = false;
     private bool hasUnlockedSkyscraper = false;
     [SerializeField] private int skullCount = 0;
+
+    
+    private Dictionary<string, int> npcDialogueProgress = new Dictionary<string, int>();
 
     private void Awake()
     {
@@ -63,11 +67,8 @@ public class GameManager : MonoBehaviour
 
     public int GetSkullCount() => skullCount;
     public bool IsSkyscraperUnlocked() => hasUnlockedSkyscraper;
-
-    
     public bool IsAlphaBaseCleared() => isAlphaBaseCleared;
     public bool IsBravoBaseCleared() => isBravoBaseCleared;
-    
 
     public void LoadScene(string sceneName)
     {
@@ -79,5 +80,19 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("[GameManager] Tried to load a scene with no name");
         }
+    }
+
+    
+    public int GetNPCDialogueIndex(string npcID)
+    {
+        if (npcDialogueProgress.TryGetValue(npcID, out int idx))
+            return idx;
+        return 0;
+    }
+
+   
+    public void SetNPCDialogueIndex(string npcID, int idx)
+    {
+        npcDialogueProgress[npcID] = idx;
     }
 }

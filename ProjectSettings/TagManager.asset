@@ -71,13 +71,22 @@ TagManager:
   - name: PropDecor
     uniqueID: 2652057897
     locked: 0
+  - name: LampBack
+    uniqueID: 2933649411
+    locked: 0
   - name: Player
     uniqueID: 602548077
+    locked: 0
+  - name: NPCBack
+    uniqueID: 3699458951
+    locked: 0
+  - name: NPCFront
+    uniqueID: 4294457309
     locked: 0
   - name: Enemy
     uniqueID: 2910098221
     locked: 0
-  - name: Lamppost
+  - name: LampFront
     uniqueID: 3261354249
     locked: 0
   - name: Blackout

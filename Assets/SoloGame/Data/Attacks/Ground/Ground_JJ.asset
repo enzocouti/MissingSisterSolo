@@ -15,8 +15,8 @@ MonoBehaviour:
   attackName: Punch2
   damage: 5
   attackDuration: 0.4
-  hitboxSize: {x: 1, y: 1}
-  hitboxOffset: {x: 1, y: 0}
+  hitboxSize: {x: 0.5, y: 0.5}
+  hitboxOffset: {x: 0.5, y: 0}
   isLauncher: 0
   isHeavy: 0
   knockbackForce: 2.5
