@@ -14,5 +14,9 @@ public class PlayerAttackData : ScriptableObject
     public float launchHeight = 2f;
     public float launchDuration = 0.45f;
     public float launchHangTime = 0.15f;
-    public float hitPause = 0.18f; 
+    public float hitPause = 0.18f;
+
+    [Header("Visual")]
+    [Tooltip("Animation clip to play when this attack starts")]
+    public AnimationClip animationClip;
 }

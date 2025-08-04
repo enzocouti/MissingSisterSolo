@@ -13,6 +13,7 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("References")]
     public Rigidbody2D rb;
+    public Animator animator;                
     public PlayerCombatInput input;
     public PlayerStateMachine stateMachine;
 
@@ -36,6 +37,7 @@ public class PlayerCombat : MonoBehaviour
         if (!input) input = GetComponent<PlayerCombatInput>();
         if (!stateMachine) stateMachine = GetComponent<PlayerStateMachine>();
         if (!rb) rb = GetComponent<Rigidbody2D>();
+        if (!animator) animator = GetComponent<Animator>(); 
     }
 
     private void OnEnable()
@@ -67,21 +69,24 @@ public class PlayerCombat : MonoBehaviour
                 Debug.Log("[ComboBuffer] Combo window ended. Reset combo.");
             }
         }
+
+        // Drive Move animation
+        animator.SetFloat("Speed", rb.linearVelocity.magnitude);
     }
 
     private void UpdateFacingDirection()
     {
         if (isAttacking || isDashing) return;
 
-        float xInput = input.moveInput.x;
-        if (xInput > 0.1f) FaceRight();
-        else if (xInput < -0.1f) FaceLeft();
+        float x = input.moveInput.x;
+        if (x > 0.1f) FaceRight();
+        else if (x < -0.1f) FaceLeft();
     }
 
     private void FaceRight()
     {
         isFacingRight = true;
-        transform.localScale = new Vector3(1f, 1f, 1f);
+        transform.localScale = Vector3.one;
     }
 
     private void FaceLeft()
@@ -102,7 +107,6 @@ public class PlayerCombat : MonoBehaviour
             bufferedInputs.Enqueue(key);
             bufferTimer = comboInputWindow;
             waitingForInput = true;
-            Debug.Log($"[ComboBuffer] Buffered: {string.Join("", bufferedInputs)} after {currentCombo}");
         }
     }
 
@@ -113,11 +117,9 @@ public class PlayerCombat : MonoBehaviour
         {
             isAttacking = true;
             stateMachine.ChangeState(new AttackState(this, entry.attackData));
-            Debug.Log($"[ComboBuffer] Started attack: {entry.comboPattern} ({entry.attackData.attackName})");
         }
         else
         {
-            Debug.Log($"[ComboBuffer] No combo found for {pattern}, resetting.");
             isAttacking = false;
             currentCombo = "";
             bufferedInputs.Clear();
@@ -127,11 +129,9 @@ public class PlayerCombat : MonoBehaviour
     public void OnAttackEnd()
     {
         isAttacking = false;
-
         if (bufferedInputs.Count > 0)
         {
             currentCombo += bufferedInputs.Dequeue();
-            Debug.Log($"[ComboBuffer] Advancing to: {currentCombo}");
             StartComboAttack(currentCombo);
         }
         else
@@ -144,6 +144,7 @@ public class PlayerCombat : MonoBehaviour
     private void HandleDash()
     {
         if (isAttacking || isDashing) return;
+        animator.SetTrigger("Dash");      
         StartCoroutine(DashRoutine());
     }
 

@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines:
   - speakerName: Beatrice
-    lineText: '"Im on my way sister"'
+    lineText: '"I will save you sister..."'
     leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
     rightPortrait: {fileID: 0}
     highlightSide: 1
   bgmClip: {fileID: 0}
   playBGM: 0
+  disablePlayerInput: 1

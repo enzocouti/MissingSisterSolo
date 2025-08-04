@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class IntroDialogueTrigger : MonoBehaviour
+public class SceneStartVNTrigger : MonoBehaviour
 {
     [SerializeField] private DialogueSequence introSequence; //trigger dialogue on start test
 

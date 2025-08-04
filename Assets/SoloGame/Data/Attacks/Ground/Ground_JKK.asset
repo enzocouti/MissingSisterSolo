@@ -15,7 +15,7 @@ MonoBehaviour:
   attackName: Finisher5
   damage: 3
   attackDuration: 0.4
-  hitboxSize: {x: 0.5, y: 0.5}
+  hitboxSize: {x: 1, y: 1}
   hitboxOffset: {x: 0.5, y: 0}
   isLauncher: 0
   isHeavy: 1
@@ -23,4 +23,5 @@ MonoBehaviour:
   launchHeight: 2.5
   launchDuration: 0.4
   launchHangTime: 0.15
-  hitPause: 0.25
+  hitPause: 0.3
+  animationClip: {fileID: -8538790154845843029, guid: e7fe75ceaaa7d614c9e03bfcae704d74, type: 3}

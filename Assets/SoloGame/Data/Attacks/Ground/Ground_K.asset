@@ -15,7 +15,7 @@ MonoBehaviour:
   attackName: Kick1
   damage: 2
   attackDuration: 0.4
-  hitboxSize: {x: 0.5, y: 0.5}
+  hitboxSize: {x: 1, y: 1}
   hitboxOffset: {x: 0.5, y: 0}
   isLauncher: 0
   isHeavy: 0
@@ -23,4 +23,5 @@ MonoBehaviour:
   launchHeight: 2.5
   launchDuration: 0.4
   launchHangTime: 0.15
-  hitPause: 0.25
+  hitPause: 0.3
+  animationClip: {fileID: -9161942407950321367, guid: e900f9def2482634a8af5367ef95ece0, type: 3}

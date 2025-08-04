@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a8428ae8eb49984b9c433f1784617a3, type: 3}
+  m_Name: FirstSisterEncounter
+  m_EditorClassIdentifier: 
+  lines:
+  - speakerName: 
+    lineText: You climb the stairs for what feels like an eternity, until you arrive
+      at the rooftop.
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    highlightSide: 0
+  - speakerName: 
+    lineText: You spot a figure standing in the rain, waiting.
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    highlightSide: 0
+  - speakerName: Beatrice
+    lineText: '"Hey edgy enforcer! seem a badass girl around? red hair? pretty like
+      me?"'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: 0}
+    highlightSide: 0
+  - speakerName: 
+    lineText: The figure turns around to face Beatrice.
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    highlightSide: 0
+  - speakerName: Meredith
+    lineText: '"..."'
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 2
+  - speakerName: Beatrice
+    lineText: '"..................."'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 1
+  - speakerName: Beatrice
+    lineText: '"S-Sister?"'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 1
+  - speakerName: Meredith
+    lineText: '"There you go again... annoying... spreading chaos... part of the
+      problem..."'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 1
+  - speakerName: Beatrice
+    lineText: '"How could you?! you know what the enforcers did! mom and dad!"'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 1
+  - speakerName: Meredith
+    lineText: '"SHUT IT! Emotions as powers... it leads to chaos... lack of order..."'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 2
+  - speakerName: Meredith
+    lineText: '"These sinful powers killed mom and dad, not the enforcers..."'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 2
+  - speakerName: Meredith
+    lineText: '"It has to be erradicated."'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 2
+  - speakerName: Beatrice
+    lineText: '"Please don''t... I won''t fight you..."'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 1
+  - speakerName: Beatrice
+    lineText: '"Then you will die"'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 1
+  - speakerName: Beatrice
+    lineText: The enforcer activates her laser blade, preparing to strike.
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
+    highlightSide: 1
+  bgmClip: {fileID: 0}
+  playBGM: 1
+  disablePlayerInput: 1

@@ -1,8 +1,13 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SkyscraperEntrance : MonoBehaviour
 {
-    public DialogueSequence enterSkyscraperDialogue; // scriptable dialogue
+    [Header("Dialogue to play when entering")]
+    [SerializeField] private DialogueSequence enterSkyscraperDialogue;
+
+    [Header("Scene to load after dialogue ends")]
+    [SerializeField] private string sceneToLoad;
 
     private bool triggered = false;
 
@@ -12,8 +17,22 @@ public class SkyscraperEntrance : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             triggered = true;
-            DialogueManager.Instance.StartDialogue(enterSkyscraperDialogue);
-            // Optional effect?
+
+            // Hook into dialogue end
+            var dm = DialogueManager.Instance;
+            dm.onDialogueEnd = () =>
+            {
+                // Clear callback to avoid accidental repeats
+                dm.onDialogueEnd = null;
+                // Load your target scene
+                if (!string.IsNullOrEmpty(sceneToLoad))
+                    SceneManager.LoadScene(sceneToLoad);
+                else
+                    Debug.LogError("[SkyscraperEntrance] sceneToLoad is empty!");
+            };
+
+            // Start the dialogue
+            dm.StartDialogue(enterSkyscraperDialogue);
         }
     }
 }
