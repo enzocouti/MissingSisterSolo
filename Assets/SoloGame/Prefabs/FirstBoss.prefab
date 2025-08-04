@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 7105253371598518068}
   - component: {fileID: 5716684429278396174}
   - component: {fileID: 2360897093138352891}
+  - component: {fileID: 2333432224579014786}
   m_Layer: 0
   m_Name: FirstBoss
   m_TagString: Enemy
@@ -110,7 +111,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1384869075
-  m_SortingLayer: 11
+  m_SortingLayer: 14
   m_SortingOrder: 0
   m_Sprite: {fileID: 6568871326204631534, guid: c78ae53b43b6aea4c97a83605e53e10d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -210,14 +211,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2.5
   detectionRange: 7
-  attackRange: 1.5
-  attackCooldown: 1
+  attackRange: 2
+  attackCooldown: 0.8
   touchDamage: 15
-  attackAngle: 60
-  bufferZone: 2.3
-  waitPaceDistance: 0.8
-  waitPaceSpeed: 1.1
+  baseHurtPause: 0.28
+  maxSimultaneousAttackers: 2
+  bufferDistance: 1.1
+  waitShuffleSpeed: 0.13
+  waitMinDistance: 1.8
+  deathArcDuration: 0.5
+  deathArcHeight: 1.2
+  deathArcDistance: 2
+  deathLayTime: 0.2
+  deathFlashTime: 0.8
+  deathFlashInterval: 0.13
+  animator: {fileID: 0}
   baseColor: {r: 0, g: 0, b: 0, a: 0}
+  isAttacking: 0
+  isDead: 0
+  isHurt: 0
+  isLaunched: 0
   bossAttackType: 0
   slamRange: 2.5
   slamDamage: 30
@@ -240,3 +253,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 60
+--- !u!95 &2333432224579014786
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3710608012585119877}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

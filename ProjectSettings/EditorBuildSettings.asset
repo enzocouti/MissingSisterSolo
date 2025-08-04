@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/SoloGame/Scenes/CombatZoneB.unity
     guid: 7e5e3b56c1a06f142a18903b571db4c9
+  - enabled: 1
+    path: Assets/SoloGame/Scenes/SkyscraperIntro.unity
+    guid: d4202a0f2f9d1124a9fc142a9b1652b9
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -227,11 +227,12 @@ MonoBehaviour:
   attackRange: 1.5
   attackCooldown: 1.5
   touchDamage: 10
-  baseHurtPause: 0.4
+  baseHurtPause: 0.6
   maxSimultaneousAttackers: 2
   bufferDistance: 1.5
   waitShuffleSpeed: 0.1
   waitMinDistance: 2
+  knockdownPause: 1.5
   deathArcDuration: 0.5
   deathArcHeight: 1.4
   deathArcDistance: 2

@@ -25,8 +25,7 @@ MonoBehaviour:
     rightPortrait: {fileID: 0}
     highlightSide: 0
   - speakerName: Beatrice
-    lineText: '"Hey edgy enforcer! seem a badass girl around? red hair? pretty like
-      me?"'
+    lineText: '"Hey enforcer! seen a badass girl around? red hair? pretty like me?"'
     leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
     rightPortrait: {fileID: 0}
     highlightSide: 0
@@ -91,6 +90,6 @@ MonoBehaviour:
     leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
     rightPortrait: {fileID: -2447898502757975272, guid: b2249fec209a05547a6b4110b1d20a23, type: 3}
     highlightSide: 1
-  bgmClip: {fileID: 0}
+  bgmClip: {fileID: 8300000, guid: fc55cd13d87d1cf429e0dd53ab526ef3, type: 3}
   playBGM: 1
   disablePlayerInput: 1

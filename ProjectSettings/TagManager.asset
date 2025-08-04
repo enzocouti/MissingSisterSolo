@@ -74,9 +74,6 @@ TagManager:
   - name: LampBack
     uniqueID: 2933649411
     locked: 0
-  - name: Player
-    uniqueID: 602548077
-    locked: 0
   - name: NPCBack
     uniqueID: 3699458951
     locked: 0
@@ -85,6 +82,9 @@ TagManager:
     locked: 0
   - name: Enemy
     uniqueID: 2910098221
+    locked: 0
+  - name: Player
+    uniqueID: 602548077
     locked: 0
   - name: LampFront
     uniqueID: 3261354249
