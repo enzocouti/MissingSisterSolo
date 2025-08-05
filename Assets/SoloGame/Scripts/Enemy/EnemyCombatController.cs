@@ -34,7 +34,7 @@ public class EnemyCombatController : MonoBehaviour
     protected static readonly string T_KNOCKDOWN = "Knockdown";
     protected static readonly string T_GETUP = "GetUp";
 
-    // Internal state
+    
     public static List<EnemyCombatController> allEnemies = new List<EnemyCombatController>();
     protected static int currentAttackers = 0;
 
@@ -52,12 +52,10 @@ public class EnemyCombatController : MonoBehaviour
 
     void Awake()
     {
-        // Grab the Animator (root or child)
         animator = GetComponent<Animator>()
                    ?? GetComponentInChildren<Animator>();
         if (animator == null)
             Debug.LogError($"[Enemy] No Animator found on {name} or children!");
-
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         baseColor = spriteRenderer ? spriteRenderer.color : Color.white;
@@ -72,10 +70,10 @@ public class EnemyCombatController : MonoBehaviour
     {
         if (isDead || isHurt || isLaunched || player == null) return;
 
-        // 1) Face the player
+        
         spriteRenderer.flipX = player.position.x < transform.position.x;
 
-        // 2) Crowd buffer
+        
         Vector2 me = transform.position;
         foreach (var other in allEnemies)
         {
@@ -88,7 +86,7 @@ public class EnemyCombatController : MonoBehaviour
             }
         }
 
-        // 3) Movement vs attack
+        
         float dist = Vector2.Distance(me, player.position);
         bool canAttack = (!isAttacking && !isWaiting && currentAttackers < maxSimultaneousAttackers)
                          || isAttacking;
@@ -137,6 +135,9 @@ public class EnemyCombatController : MonoBehaviour
     {
         if (animator) animator.SetTrigger(T_ATTACK);
 
+        
+        if (SoundManager.Instance) SoundManager.Instance.PlayEnemyPunch();
+
         spriteRenderer.color = Color.yellow;
         yield return new WaitForSeconds(0.17f);
 
@@ -154,6 +155,9 @@ public class EnemyCombatController : MonoBehaviour
     {
         if (isDead) return;
         if (animator) animator.SetTrigger(T_HURT);
+
+        
+        if (SoundManager.Instance) SoundManager.Instance.PlayEnemyHurt();
 
         float pause = (data != null && data.hitPause > 0f)
                       ? data.hitPause
@@ -183,7 +187,6 @@ public class EnemyCombatController : MonoBehaviour
         if (animator) animator.SetTrigger(T_KNOCKBACK);
 
         Vector3 start = transform.position;
-        // send them AWAY from their facing direction:
         float dir = spriteRenderer.flipX ? +1f : -1f;
         Vector3 end = start + Vector3.right * (dir * d.knockbackForce);
 
@@ -201,6 +204,10 @@ public class EnemyCombatController : MonoBehaviour
         if (animator) animator.SetTrigger(T_KNOCKDOWN);
         yield return new WaitForSeconds(0.2f);
         if (animator) animator.SetTrigger(T_GETUP);
+
+       
+        if (SoundManager.Instance) SoundManager.Instance.PlayEnemyGetUp();
+
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
 
         isLaunched = false;
@@ -237,6 +244,10 @@ public class EnemyCombatController : MonoBehaviour
         if (animator) animator.SetTrigger(T_KNOCKDOWN);
         yield return new WaitForSeconds(0.2f);
         if (animator) animator.SetTrigger(T_GETUP);
+
+        
+        if (SoundManager.Instance) SoundManager.Instance.PlayEnemyGetUp();
+
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
 
         isLaunched = false;
@@ -247,6 +258,10 @@ public class EnemyCombatController : MonoBehaviour
         isDead = true;
         StopAllCoroutines();
         if (isAttacking) currentAttackers = Mathf.Max(0, currentAttackers - 1);
+
+        
+        if (SoundManager.Instance) SoundManager.Instance.PlayEnemyDeath();
+
         StartCoroutine(DeathArcSequence());
     }
 

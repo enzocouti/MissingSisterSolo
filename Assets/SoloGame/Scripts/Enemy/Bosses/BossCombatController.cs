@@ -58,7 +58,7 @@ public class BossCombatController : MonoBehaviour
 
         float dist = Vector3.Distance(transform.position, player.position);
 
-        // Face player
+        
         if (spriteRenderer)
             spriteRenderer.flipX = player.position.x < transform.position.x;
 
@@ -90,8 +90,14 @@ public class BossCombatController : MonoBehaviour
         {
             nextSlamTime = Time.time + slamCooldown;
 
+            
+            if (SoundManager.Instance) SoundManager.Instance.PlayBossSlam();
+
             animator.SetTrigger(HASH_SLAM_WIND);
             yield return new WaitForSeconds(slamWindup);
+
+            
+            if (SoundManager.Instance) SoundManager.Instance.PlayBossSlam();
 
             animator.SetTrigger(HASH_SLAM_IMP);
             var hits = Physics2D.OverlapCircleAll(transform.position, slamRange);
@@ -106,6 +112,9 @@ public class BossCombatController : MonoBehaviour
         }
         else
         {
+            
+            if (SoundManager.Instance) SoundManager.Instance.PlayBossPunch();
+
             animator.SetTrigger(HASH_PUNCH);
             yield return new WaitForSeconds(punchWindup);
 
@@ -120,12 +129,19 @@ public class BossCombatController : MonoBehaviour
         isAttacking = false;
     }
 
-    
+    public void PlayHurtSFX()
+    {
+        if (SoundManager.Instance) SoundManager.Instance.PlayBossHurt();
+    }
+
     public void Die()
     {
         isDead = true;
         isAttacking = true;
         isStunned = true;
+
+        
+        if (SoundManager.Instance) SoundManager.Instance.PlayBossDeath();
 
         var coll = GetComponent<Collider2D>();
         if (coll) coll.enabled = false;
@@ -135,16 +151,12 @@ public class BossCombatController : MonoBehaviour
 
     IEnumerator DeathSequence()
     {
-        
         yield return new WaitForSeconds(deathFreezeTime);
 
-        
         if (animator) animator.SetTrigger(HASH_DIE);
 
-        
         yield return new WaitForSeconds(deathSequenceDelay);
 
-       
         CombatZoneManager.Instance?.NotifyEnemyKilled(gameObject);
         Destroy(gameObject);
     }

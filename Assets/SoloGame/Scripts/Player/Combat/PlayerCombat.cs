@@ -144,6 +144,7 @@ public class PlayerCombat : MonoBehaviour
     private void HandleDash()
     {
         if (isAttacking || isDashing) return;
+        SoundManager.Instance?.PlayDash();
         animator.SetTrigger("Dash");      
         StartCoroutine(DashRoutine());
     }

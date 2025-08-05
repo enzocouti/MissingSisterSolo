@@ -17,22 +17,18 @@ public class AttackState : IPlayerState
 
     public void Enter()
     {
-        
+
         originalController = player.animator.runtimeAnimatorController;
-
-        
         var overrideController = new AnimatorOverrideController(originalController);
-
-        
         overrideController["FirstPunch_Clip"] = attackData.animationClip;
-
-        
         player.animator.runtimeAnimatorController = overrideController;
 
-        
         player.animator.SetTrigger("Attack");
 
         
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayRandomPunch();
+
         SpawnHitbox();
         timer = attackData.attackDuration;
     }

@@ -34,7 +34,8 @@ public class BossHealth : MonoBehaviour
         currentHealth = Mathf.Max(0, currentHealth - dmg);
         UpdateUI();
 
-    
+        if (combatCtrl) combatCtrl.PlayHurtSFX();
+
         if (combatCtrl && combatCtrl.animator) combatCtrl.animator.SetTrigger("Hurt");
 
         if (currentHealth == 0)

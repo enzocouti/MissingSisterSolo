@@ -50,7 +50,6 @@ public class PlayerHealth : MonoBehaviour
         if (isInvincible || isKnockedDown || isDead)
             return;
 
-        
         float now = Time.time;
         if (now - lastHitTime < knockdownComboWindow)
             consecutiveHits++;
@@ -58,15 +57,14 @@ public class PlayerHealth : MonoBehaviour
             consecutiveHits = 1;
         lastHitTime = now;
 
-        
         currentHealth = Mathf.Max(0, currentHealth - amount);
         UpdateUI();
 
-        
         animator.SetTrigger("Hurt");
+        if (SoundManager.Instance) SoundManager.Instance.PlayHurt();
+
         StartCoroutine(HitFeedback());
 
-        
         if (currentHealth <= 0 && !isDead)
         {
             isDead = true;
@@ -74,7 +72,6 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-        
         if (consecutiveHits >= hitsForKnockdown)
         {
             StartCoroutine(KnockdownCoroutine());
@@ -86,7 +83,6 @@ public class PlayerHealth : MonoBehaviour
     {
         isInvincible = true;
 
-        
         var sr = GetComponent<SpriteRenderer>();
         if (sr) sr.color = Color.red;
         float t = 0f;
@@ -96,7 +92,6 @@ public class PlayerHealth : MonoBehaviour
             yield return null;
         }
 
-        
         Vector3 orig = transform.position;
         for (int i = 0; i < shakeCount; i++)
         {
@@ -107,7 +102,6 @@ public class PlayerHealth : MonoBehaviour
 
         if (sr) sr.color = Color.white;
 
-        
         yield return new WaitForSeconds(invincibleTime - flashDuration);
         isInvincible = false;
     }
@@ -124,10 +118,9 @@ public class PlayerHealth : MonoBehaviour
         isInvincible = true;
         playerInput.SetInputEnabled(false);
 
-       
         animator.SetTrigger("Knockback");
+        if (SoundManager.Instance) SoundManager.Instance.PlayHurt();
 
-        
         float arcDuration = 0.45f, arcHeight = 1.5f, arcDistance = 2f;
         Vector3 start = transform.position;
         float dir = transform.localScale.x > 0 ? -1 : 1;
@@ -145,15 +138,16 @@ public class PlayerHealth : MonoBehaviour
         }
         transform.position = new Vector3(target.x, start.y, start.z);
 
-        
         animator.SetTrigger("Knockdown");
+        if (SoundManager.Instance) SoundManager.Instance.PlayDeath();
+
         yield return new WaitForSeconds(0.45f);
 
-        
         animator.SetTrigger("GetUp");
+        if (SoundManager.Instance) SoundManager.Instance.PlayGetUp();
+
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
 
-        
         isKnockedDown = false;
         isInvincible = false;
         playerInput.SetInputEnabled(true);
@@ -165,9 +159,10 @@ public class PlayerHealth : MonoBehaviour
         yield return StartCoroutine(KnockdownCoroutine());
 
         
+        if (SoundManager.Instance) SoundManager.Instance.PlayDeath();
+
         yield return new WaitForSeconds(0.3f);
 
-        
         if (CombatZoneManager.Instance != null)
             CombatZoneManager.Instance.HandlePlayerDefeat();
         else
