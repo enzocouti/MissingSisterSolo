@@ -23,8 +23,8 @@ public class CombatZoneManager : MonoBehaviour
     public GameObject blockade3;
 
     [Header("UI")]
-    public GameObject goIconObject;  
-    public Image goIconImage;        
+    public GameObject goIconObject;
+    public Image goIconImage;
     public GameObject baseClearedText;
     public GameObject bossHealthUI;
     public GameObject defeatBlackout;
@@ -196,7 +196,7 @@ public class CombatZoneManager : MonoBehaviour
         }
     }
 
-   
+
 
     private void SetGOIconActive(bool isActive)
     {

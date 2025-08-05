@@ -23,5 +23,16 @@ MonoBehaviour:
     leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
     rightPortrait: {fileID: 2253639577306037883, guid: 4b3a6b41d7df688418acafd4276e9989, type: 3}
     highlightSide: 1
+  - speakerName: The Boss
+    lineText: '"ME?! HA! ..."'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: 2253639577306037883, guid: 4b3a6b41d7df688418acafd4276e9989, type: 3}
+    highlightSide: 2
+  - speakerName: The Boss
+    lineText: '"Go get her muscle boy"'
+    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
+    rightPortrait: {fileID: 2253639577306037883, guid: 4b3a6b41d7df688418acafd4276e9989, type: 3}
+    highlightSide: 2
   bgmClip: {fileID: 0}
   playBGM: 1
+  disablePlayerInput: 1

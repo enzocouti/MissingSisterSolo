@@ -5,62 +5,62 @@ using System.Collections.Generic;
 public class EnemyCombatController : MonoBehaviour
 {
     [Header("AI & Combat")]
-    public float moveSpeed       = 2.5f;
-    public float detectionRange  = 7f;
-    public float attackRange     = 1.2f;
-    public float attackCooldown  = 1.4f;
-    public int   touchDamage     = 2;
-    public float baseHurtPause   = 0.28f;
+    public float moveSpeed = 2.5f;
+    public float detectionRange = 7f;
+    public float attackRange = 1.2f;
+    public float attackCooldown = 1.4f;
+    public int touchDamage = 2;
+    public float baseHurtPause = 0.28f;
 
     [Header("Crowd Logic")]
-    [Range(1,5)] public int maxSimultaneousAttackers = 2;
-    public float bufferDistance   = 1.1f;
+    [Range(1, 5)] public int maxSimultaneousAttackers = 2;
+    public float bufferDistance = 1.1f;
     public float waitShuffleSpeed = 0.13f;
-    public float waitMinDistance  = 1.8f;
+    public float waitMinDistance = 1.8f;
 
     [Header("Death FX")]
-    public float deathArcDuration   = 0.5f;
-    public float deathArcHeight     = 1.2f;
-    public float deathArcDistance   = 2f;
-    public float deathLayTime       = 0.2f;
-    public float deathFlashTime     = 0.8f;
+    public float deathArcDuration = 0.5f;
+    public float deathArcHeight = 1.2f;
+    public float deathArcDistance = 2f;
+    public float deathLayTime = 0.2f;
+    public float deathFlashTime = 0.8f;
     public float deathFlashInterval = 0.13f;
 
     [Header("Animation")]
     public Animator animator;
-    protected static readonly string T_ATTACK    = "Attack";
-    protected static readonly string T_HURT      = "Hurt";
+    protected static readonly string T_ATTACK = "Attack";
+    protected static readonly string T_HURT = "Hurt";
     protected static readonly string T_KNOCKBACK = "Knockback";
     protected static readonly string T_KNOCKDOWN = "Knockdown";
-    protected static readonly string T_GETUP     = "GetUp";
+    protected static readonly string T_GETUP = "GetUp";
 
     // Internal state
     public static List<EnemyCombatController> allEnemies = new List<EnemyCombatController>();
     protected static int currentAttackers = 0;
 
-    protected Transform      player;
+    protected Transform player;
     protected SpriteRenderer spriteRenderer;
-    public    Color          baseColor;
+    public Color baseColor;
 
     public bool isAttacking, isDead, isHurt, isLaunched;
     bool isWaiting;
     float shuffleTimer;
     Vector2 waitShuffleDir;
 
-    void OnEnable()  => allEnemies.Add(this);
+    void OnEnable() => allEnemies.Add(this);
     void OnDisable() { allEnemies.Remove(this); if (isAttacking) currentAttackers--; }
 
     void Awake()
     {
         // Grab the Animator (root or child)
-        animator = GetComponent<Animator>() 
+        animator = GetComponent<Animator>()
                    ?? GetComponentInChildren<Animator>();
         if (animator == null)
             Debug.LogError($"[Enemy] No Animator found on {name} or children!");
 
-        
+
         spriteRenderer = GetComponent<SpriteRenderer>();
-        baseColor      = spriteRenderer ? spriteRenderer.color : Color.white;
+        baseColor = spriteRenderer ? spriteRenderer.color : Color.white;
     }
 
     void Start()
@@ -242,7 +242,7 @@ public class EnemyCombatController : MonoBehaviour
         isLaunched = false;
     }
 
-    public void OnDeath()
+    public virtual void OnDeath()
     {
         isDead = true;
         StopAllCoroutines();

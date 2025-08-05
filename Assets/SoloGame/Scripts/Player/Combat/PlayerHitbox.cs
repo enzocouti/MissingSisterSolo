@@ -8,23 +8,24 @@ public class PlayerHitbox : MonoBehaviour
     {
         if (!other.CompareTag("Enemy")) return;
 
-        
-        var playerCombat = GetComponentInParent<PlayerCombat>();
-        bool facingRight = playerCombat?.isFacingRight ?? true;
-
         Debug.Log($"{attackData.attackName} hit {other.name}");
 
-        var boss = other.GetComponent<BossHealth>();
-        if (boss != null)
+        
+        var bossHealth = other.GetComponent<BossHealth>();
+        if (bossHealth != null)
         {
-            boss.TakeDamage(attackData, facingRight);
+            bossHealth.TakeDamage(attackData.damage);
             return;
         }
 
-        var enemy = other.GetComponent<EnemyHealth>();
-        if (enemy != null)
+       
+        var enemyHealth = other.GetComponent<EnemyHealth>();
+        if (enemyHealth != null)
         {
-            enemy.TakeDamage(attackData, facingRight);
+            
+            var playerCombat = GetComponentInParent<PlayerCombat>();
+            bool facingRight = playerCombat != null && playerCombat.isFacingRight;
+            enemyHealth.TakeDamage(attackData, facingRight);
         }
     }
 }
