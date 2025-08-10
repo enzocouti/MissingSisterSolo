@@ -224,10 +224,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 2
   detectionRange: 7
-  attackRange: 1
+  attackRange: 1.2
   attackCooldown: 2
   touchDamage: 5
-  baseHurtPause: 0
+  baseHurtPause: 0.3
   maxSimultaneousAttackers: 2
   bufferDistance: 1.5
   waitShuffleSpeed: 0.1

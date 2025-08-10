@@ -10,28 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a8428ae8eb49984b9c433f1784617a3, type: 3}
-  m_Name: AlphaBaseBoss
+  m_Name: SideThird
   m_EditorClassIdentifier: 
   lines:
-  - speakerName: The Boss
-    lineText: '"Who the f#ck are you?"'
+  - speakerName: Curious Girl
+    lineText: '"Hey Bea! They left to investigate because of you, you go girl!"'
     leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
-    rightPortrait: {fileID: 2253639577306037883, guid: 4b3a6b41d7df688418acafd4276e9989, type: 3}
+    rightPortrait: {fileID: -8617111398294895233, guid: 322920cb495890d418cc402b2c2cf5cc, type: 3}
     highlightSide: 2
   - speakerName: Beatrice
-    lineText: '"Shut up and fight"'
+    lineText: '"T-Thank you.... I guess?"'
     leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
-    rightPortrait: {fileID: 2253639577306037883, guid: 4b3a6b41d7df688418acafd4276e9989, type: 3}
+    rightPortrait: {fileID: -8617111398294895233, guid: 322920cb495890d418cc402b2c2cf5cc, type: 3}
     highlightSide: 1
-  - speakerName: The Boss
-    lineText: '"ME?! HA! ..."'
+  - speakerName: Curious
+    lineText: '"Strange... I didnt see that scary enforcer leave with them..."'
     leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
-    rightPortrait: {fileID: 2253639577306037883, guid: 4b3a6b41d7df688418acafd4276e9989, type: 3}
-    highlightSide: 2
-  - speakerName: The Boss
-    lineText: '"Go get her muscle boy"'
-    leftPortrait: {fileID: -3578110825638431656, guid: 5f06a46555f3aed4eb799fc257dd609a, type: 3}
-    rightPortrait: {fileID: 2253639577306037883, guid: 4b3a6b41d7df688418acafd4276e9989, type: 3}
+    rightPortrait: {fileID: -8617111398294895233, guid: 322920cb495890d418cc402b2c2cf5cc, type: 3}
     highlightSide: 2
   bgmClip: {fileID: 0}
   playBGM: 1

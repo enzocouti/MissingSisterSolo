@@ -18,16 +18,22 @@ public class BossCombatController : MonoBehaviour
     [Header("Slam Attack")]
     public int slamDamage = 5;
     public float slamRange = 1.8f;
-    public float slamWindup = 0.5f;
-    public float slamImpactTime = 0.10f;
+    public float slamWindup = 0.7f;   // Matches your animator 
+    public float slamImpactTime = 0.9f; // Matches your animator 
     public float slamCooldown = 3f;
     [Range(0f, 1f)] public float slamChance = 0.45f;
     public float slamStunDuration = 0.5f;
 
+    [Header("Stunned")]
+    public int stunThreshold = 4;      // How many hits before stunned
+    public float stunResetTime = 2.0f; // Time window to count hits
+    public float stunnedDuration = 1.3f; // How long to stay stunned
+    private int hitsInWindow = 0;
+    private float lastHitTime = -999f;
+    private static readonly int HASH_STUNNED = Animator.StringToHash("Stunned");
+
     [Header("Death Sequence")]
-    [Tooltip("Pause after boss health hits 0, before death animation (seconds)")]
     public float deathFreezeTime = 0.6f;
-    [Tooltip("Pause after death animation before base cleared (seconds)")]
     public float deathSequenceDelay = 1.3f;
 
     [Header("Animation")]
@@ -43,6 +49,7 @@ public class BossCombatController : MonoBehaviour
     private bool isStunned;
     private bool isDead;
     private float nextSlamTime = 0f;
+    private float nextPunchTime = 0f;
     private SpriteRenderer spriteRenderer;
 
     void Start()
@@ -50,6 +57,7 @@ public class BossCombatController : MonoBehaviour
         if (animator == null) animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        nextSlamTime = Time.time + Random.Range(1.5f, 2.5f);
     }
 
     void Update()
@@ -58,7 +66,7 @@ public class BossCombatController : MonoBehaviour
 
         float dist = Vector3.Distance(transform.position, player.position);
 
-        
+        // Face player
         if (spriteRenderer)
             spriteRenderer.flipX = player.position.x < transform.position.x;
 
@@ -68,6 +76,7 @@ public class BossCombatController : MonoBehaviour
             return;
         }
 
+        // Movement
         if (dist > attackRange)
         {
             Vector3 dir = (player.position - transform.position).normalized;
@@ -77,56 +86,109 @@ public class BossCombatController : MonoBehaviour
         else
         {
             animator.SetFloat(HASH_SPEED, 0f);
-            StartCoroutine(PerformAttack());
+        }
+
+        // Random Slam Logic: attempts slam at random intervals
+        if (Time.time >= nextSlamTime && !isAttacking)
+        {
+            if (Random.value < slamChance)
+            {
+                StartCoroutine(SlamAttack());
+                nextSlamTime = Time.time + slamCooldown;
+                return;
+            }
+            else
+            {
+                // Even if boss skips slam push the next slam attempt into future
+                nextSlamTime = Time.time + 1.3f;
+            }
+        }
+
+        // Standard Punch only if in attack range after cooldown 
+        if (dist <= attackRange && !isAttacking && Time.time >= nextPunchTime)
+        {
+            StartCoroutine(PunchAttack());
+            nextPunchTime = Time.time + punchCooldown;
         }
     }
 
-    IEnumerator PerformAttack()
+    IEnumerator PunchAttack()
     {
         isAttacking = true;
+        if (SoundManager.Instance) SoundManager.Instance.PlayBossPunch();
 
-        bool doSlam = Time.time >= nextSlamTime && Random.value < slamChance;
-        if (doSlam)
+        animator.SetTrigger(HASH_PUNCH);
+        yield return new WaitForSeconds(punchWindup);
+
+        if (player != null && Vector3.Distance(transform.position, player.position) <= attackRange)
         {
-            nextSlamTime = Time.time + slamCooldown;
+            player.GetComponent<PlayerHealth>()?.TakeDamage(punchDamage);
+        }
+        yield return new WaitForSeconds(punchHitPause);
 
-            
-            if (SoundManager.Instance) SoundManager.Instance.PlayBossSlam();
+        isAttacking = false;
+    }
 
-            animator.SetTrigger(HASH_SLAM_WIND);
-            yield return new WaitForSeconds(slamWindup);
+    IEnumerator SlamAttack()
+    {
+        isAttacking = true;
+        if (SoundManager.Instance) SoundManager.Instance.PlayBossSlam();
 
-            
-            if (SoundManager.Instance) SoundManager.Instance.PlayBossSlam();
+        animator.SetTrigger(HASH_SLAM_WIND);
+        yield return new WaitForSeconds(slamWindup);
 
-            animator.SetTrigger(HASH_SLAM_IMP);
-            var hits = Physics2D.OverlapCircleAll(transform.position, slamRange);
-            foreach (var h in hits)
-                if (h.CompareTag("Player"))
-                    h.GetComponent<PlayerHealth>()?.TakeDamage(slamDamage);
-            yield return new WaitForSeconds(slamImpactTime);
+        // Impact!
+        if (SoundManager.Instance) SoundManager.Instance.PlayBossSlam();
+        animator.SetTrigger(HASH_SLAM_IMP);
 
-            isStunned = true;
-            yield return new WaitForSeconds(slamStunDuration);
-            isStunned = false;
+        var hits = Physics2D.OverlapCircleAll(transform.position, slamRange);
+        foreach (var h in hits)
+            if (h.CompareTag("Player"))
+                h.GetComponent<PlayerHealth>()?.TakeDamage(slamDamage);
+
+        yield return new WaitForSeconds(slamImpactTime);
+
+        isAttacking = false;
+    }
+
+    // Called by BossHealth whenever boss takes damage
+    public void RegisterHit()
+    {
+        // Track quick consecutive hits for stun
+        if (Time.time - lastHitTime <= stunResetTime)
+        {
+            hitsInWindow++;
         }
         else
         {
-            
-            if (SoundManager.Instance) SoundManager.Instance.PlayBossPunch();
+            hitsInWindow = 1;
+        }
+        lastHitTime = Time.time;
 
-            animator.SetTrigger(HASH_PUNCH);
-            yield return new WaitForSeconds(punchWindup);
+        if (!isStunned && hitsInWindow >= stunThreshold)
+        {
+            StartCoroutine(StunRoutine());
+            hitsInWindow = 0;
+        }
+    }
 
-            if (Vector3.Distance(transform.position, player.position) <= attackRange)
-                player.GetComponent<PlayerHealth>()?.TakeDamage(punchDamage);
-            yield return new WaitForSeconds(punchHitPause);
+    IEnumerator StunRoutine()
+    {
+        isStunned = true;
+        isAttacking = false;
 
-            float rem = punchCooldown - punchWindup - punchHitPause;
-            if (rem > 0f) yield return new WaitForSeconds(rem);
+        // Play stunned animation
+        if (animator) animator.SetTrigger(HASH_STUNNED);
+
+        float elapsed = 0f;
+        while (elapsed < stunnedDuration)
+        {
+            // Boss can't move or attack while stunned
+            yield return null;
+            elapsed += Time.deltaTime;
         }
 
-        isAttacking = false;
+        isStunned = false;
     }
 
     public void PlayHurtSFX()
@@ -140,7 +202,6 @@ public class BossCombatController : MonoBehaviour
         isAttacking = true;
         isStunned = true;
 
-        
         if (SoundManager.Instance) SoundManager.Instance.PlayBossDeath();
 
         var coll = GetComponent<Collider2D>();

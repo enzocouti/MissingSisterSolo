@@ -36,6 +36,9 @@ public class BossHealth : MonoBehaviour
 
         if (combatCtrl) combatCtrl.PlayHurtSFX();
 
+        // Register hit for stun logic
+        if (combatCtrl) combatCtrl.RegisterHit();
+
         if (combatCtrl && combatCtrl.animator) combatCtrl.animator.SetTrigger("Hurt");
 
         if (currentHealth == 0)

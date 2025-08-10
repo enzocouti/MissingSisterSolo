@@ -210,19 +210,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionRange: 8
-  attackRange: 2
-  moveSpeed: 2.5
+  attackRange: 1.4
+  moveSpeed: 2
   punchDamage: 10
   punchWindup: 0.18
   punchHitPause: 0.1
   punchCooldown: 0.7
   slamDamage: 20
-  slamRange: 2.5
+  slamRange: 3
   slamWindup: 0.5
   slamImpactTime: 0.1
   slamCooldown: 3
-  slamChance: 0.455
+  slamChance: 0.526
   slamStunDuration: 3
+  stunThreshold: 6
+  stunResetTime: 5
+  stunnedDuration: 5
   deathFreezeTime: 2
   deathSequenceDelay: 2
   animator: {fileID: 2333432224579014786}
@@ -238,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db58898e6b8644b40adb6b31a5678832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 60
+  maxHealth: 90
   healthBar: {fileID: 0}
 --- !u!95 &2333432224579014786
 Animator:

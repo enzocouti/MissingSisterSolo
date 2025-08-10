@@ -23,5 +23,5 @@ MonoBehaviour:
   launchHeight: 2.5
   launchDuration: 0.4
   launchHangTime: 0.15
-  hitPause: 0.6
+  hitPause: 0
   animationClip: {fileID: -9066253072293047726, guid: 3230cf9a19a09ce4f913de3c2d91394d, type: 3}

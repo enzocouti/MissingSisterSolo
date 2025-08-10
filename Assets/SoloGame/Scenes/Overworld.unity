@@ -3181,7 +3181,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 602548077
-  m_SortingLayer: 11
+  m_SortingLayer: 14
   m_SortingOrder: 0
   m_Sprite: {fileID: -3670160152761195968, guid: 485cfa53f516b1048bf74102fd04f098, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3875,9 +3875,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 769631267}
     - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
+      propertyPath: afterBravoCleared.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
       propertyPath: dialogueSequences.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
+      propertyPath: 'afterBravoCleared.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 84895eaeb13b16e49a13ba269a8709ac, type: 2}
+    - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
+      propertyPath: 'afterBravoCleared.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 2e73a304d121d8d48b1e5cc7a0059a4a, type: 2}
     - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
       propertyPath: 'dialogueSequences.Array.data[0]'
       value: 
@@ -12829,7 +12841,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -509987
-  m_SortingLayer: 13
+  m_SortingLayer: 12
   m_SortingOrder: 0
   m_Sprite: {fileID: 5326363238488618601, guid: 75e06f1808c85694cbfa8a825cc9f224, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -13811,7 +13823,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -509987
-  m_SortingLayer: 13
+  m_SortingLayer: 12
   m_SortingOrder: 0
   m_Sprite: {fileID: 8411127345407912693, guid: c95d1f7659e1ad14882e19f8a1ca4f1a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -14430,6 +14442,22 @@ PrefabInstance:
       propertyPath: dialogueText
       value: 
       objectReference: {fileID: 1774586396}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: fadedColor.a
+      value: 0.4117647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: fadedColor.b
+      value: 0.5377358
+      objectReference: {fileID: 0}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: fadedColor.g
+      value: 0.5377358
+      objectReference: {fileID: 0}
+    - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
+      propertyPath: fadedColor.r
+      value: 0.5377358
+      objectReference: {fileID: 0}
     - target: {fileID: 7181007399910193510, guid: c26b1bda648ccb94f9691a09f7c3be7c, type: 3}
       propertyPath: leftPortrait
       value: 
@@ -17739,6 +17767,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1796846953}
     - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
+      propertyPath: afterAlphaCleared.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
+      propertyPath: 'afterAlphaCleared.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: bfd87402ab42fb34daeff4853b07dada, type: 2}
+    - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
+      propertyPath: 'afterAlphaCleared.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f7a755e07db46a24383e3e2d08c33788, type: 2}
+    - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
       propertyPath: 'dialogueSequences.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: 85c9173a2fdb0de468cc7a25116b4e15, type: 2}
@@ -18128,6 +18168,18 @@ PrefabInstance:
       propertyPath: 'dialogueSequences.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: 197487c771df2314a8c5245a60618cb3, type: 2}
+    - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
+      propertyPath: afterBothBasesCleared.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
+      propertyPath: 'afterBothBasesCleared.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b98ebc5fbb53daf4480b9ee841ba29af, type: 2}
+    - target: {fileID: 7363005593836774169, guid: f827f6b0c2855d740a1de2f95c23c4f8, type: 3}
+      propertyPath: 'afterBothBasesCleared.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: becad2e4ec73b5f439756f439815ddfa, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
